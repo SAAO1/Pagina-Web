@@ -356,6 +356,7 @@ textarea.fi{resize:vertical;min-height:80px}
       <div class="sb-lbl">Ventas</div>
       <div class="snav act" onclick="showTab('dashboard',this)"><i class="fas fa-chart-bar"></i> Dashboard</div>
       <div class="snav" onclick="showTab('orders',this)"><i class="fas fa-shopping-bag"></i> Pedidos <span class="sb-badge" id="pendBadge">0</span></div>
+      <div class="snav" onclick="showTab('ventas',this)"><i class="fas fa-cash-register"></i> Ventas Local <span class="sb-badge" id="ventasBadge" style="background:var(--ok)">0</span></div>
       <div class="snav" onclick="showTab('users',this)"><i class="fas fa-users"></i> Clientes</div>
       <div class="snav" onclick="showTab('newsletter',this)"><i class="fas fa-envelope"></i> Newsletter</div>
     </div>
@@ -463,6 +464,26 @@ textarea.fi{resize:vertical;min-height:80px}
       <div class="info-box info-blue"><i class="fas fa-info-circle"></i><span>Las categorías que crees aquí aparecen automáticamente en el menú de tu tienda. Puedes agregar imagen URL, emoji e icono a cada una.</span></div>
       <div class="prod-grid" id="catGrid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr))"></div>
       <div class="info-box info-warn"><i class="fas fa-exclamation-triangle"></i><span>Eliminar una categoría <strong>no elimina</strong> sus productos, solo desaparece del menú.</span></div>
+    </div>
+
+    <!-- ════ VENTAS LOCAL ════ -->
+    <div class="atab" id="tab-ventas">
+      <div class="page-hd">
+        <h1 class="page-title">Ventas <em>del Local</em></h1>
+        <div style="display:flex;gap:10px;align-items:center">
+          <span style="font-size:13px;color:var(--gray)">Total hoy: <strong id="ventasHoy" style="color:var(--vino)">$0</strong></span>
+          <span style="font-size:13px;color:var(--gray)">Total general: <strong id="ventasTotal" style="color:var(--ok)">$0</strong></span>
+        </div>
+      </div>
+      <div class="info-box info-ok"><i class="fas fa-bolt"></i><span>Las ventas registradas por los empleados en el punto de venta aparecen aquí en tiempo real.</span></div>
+      <div class="card">
+        <div class="card-body">
+          <table class="tbl">
+            <thead><tr><th>#Venta</th><th>Empleado</th><th>Productos</th><th>Total</th><th>Fecha</th></tr></thead>
+            <tbody id="ventasTbl"><tr><td colspan="5" style="text-align:center;padding:32px;color:var(--gray)"><i class="fas fa-spinner fa-spin" style="font-size:20px"></i></td></tr></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- ════ CLIENTES ════ -->
@@ -845,7 +866,7 @@ const ADMIN_EMAIL = 'natural.sex001@gmail.com';
 // ══════════════════════════════════
 // STATE
 // ══════════════════════════════════
-let allOrders=[], allProds=[], allUsers=[], allNL=[], allCats=[];
+let allOrders=[], allProds=[], allUsers=[], allNL=[], allCats=[], allVentas=[];
 
 // ══════════════════════════════════
 // IMGBB — subida de imágenes GRATIS
@@ -988,6 +1009,15 @@ function startListeners(){
     }
     renderCats(); populateCatSelects();
   });
+  // Ventas del local
+  onSnapshot(collection(window._db,'ventas_local'), snap=>{
+    allVentas = snap.docs.map(d=>({docId:d.id,...d.data()}));
+    // Ordenar por fecha descendente en el cliente (sin necesitar índice)
+    allVentas.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+    renderVentas(allVentas);
+    updateVentasStats();
+  }, err=>{ console.warn('ventas_local error:',err.message); });
+
   // Config del sitio (hero, banners, etc)
   onSnapshot(collection(window._db,'siteConfig'), snap=>{
     snap.docs.forEach(d=>{
@@ -1400,6 +1430,39 @@ async function deleteProd(docId){
 
 // ══════════════════════════════════
 // CATEGORÍAS
+// ══════════════════════════════════
+// VENTAS LOCAL
+// ══════════════════════════════════
+function renderVentas(list){
+  const tbody = document.getElementById('ventasTbl');
+  if(!tbody) return;
+  if(!list.length){
+    tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--gray)">No hay ventas registradas</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(v=>`<tr>
+    <td><strong style="color:var(--vino)">#${v.saleNum||'—'}</strong></td>
+    <td style="font-size:12px">${v.empleado||'—'}</td>
+    <td style="font-size:12px">${(v.items||[]).map(i=>`${i.qty}× ${i.name}`).join('<br>')}</td>
+    <td><strong style="color:var(--ok)">$${(v.total||0).toLocaleString('es-CO')}</strong></td>
+    <td style="font-size:11.5px;color:var(--gray)">${formatDate(v.createdAt)}</td>
+  </tr>`).join('');
+}
+
+function updateVentasStats(){
+  const hoy = new Date().toDateString();
+  const totalHoy = allVentas
+    .filter(v=>new Date(v.createdAt).toDateString()===hoy)
+    .reduce((s,v)=>s+(v.total||0),0);
+  const totalGen = allVentas.reduce((s,v)=>s+(v.total||0),0);
+  const el1=document.getElementById('ventasHoy');
+  const el2=document.getElementById('ventasTotal');
+  if(el1) el1.textContent='$'+totalHoy.toLocaleString('es-CO');
+  if(el2) el2.textContent='$'+totalGen.toLocaleString('es-CO');
+  const badge=document.getElementById('ventasBadge');
+  if(badge){ badge.textContent=allVentas.length; badge.style.display=allVentas.length?'inline':'none'; }
+}
+
 // ══════════════════════════════════
 // SHIPPING CONFIG
 // ══════════════════════════════════
