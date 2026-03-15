@@ -963,12 +963,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
     </div>
   </section>
 
-  <section>
-    <div class="sec">
-      <div class="sh"><span class="stag">🔥 Esta Semana</span><h2 class="stitle">Ofertas de la <em>Semana</em></h2></div>
-      <div class="pg" id="homeOffers"></div>
-    </div>
-  </section>
+
 
   <div class="promo-banner">
     <div class="pb-inner">
@@ -982,12 +977,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
     </div>
   </div>
 
-  <section style="background:var(--off)">
-    <div class="sec">
-      <div class="sh"><span class="stag">Recomendados</span><h2 class="stitle">Más <em>Vendidos</em></h2></div>
-      <div class="pg" id="homeFeatured"></div>
-    </div>
-  </section>
+
 
   <section class="store-sec">
     <div class="sec">
@@ -1758,10 +1748,7 @@ function renderG(id,items){
 }
 
 function renderHomeGrids(){
-  const offers=allProds.filter(p=>p.badge==='off'||p.badge==='hot').slice(0,4);
-  const featured=allProds.slice(0,4);
-  renderG('homeOffers',offers.length?offers:allProds.slice(0,4));
-  renderG('homeFeatured',allProds.slice(4,8));
+  // Secciones de ofertas y destacados eliminadas del home
 }
 
 function renderCatalogGrid(items){
@@ -1903,13 +1890,17 @@ function goCheckout(){
   if(!cart.length){toast('Agrega productos al carrito primero');return;}
   toggleCart(); currentStep=1;
   coShowStep(1); go('checkout');
-  // Auto-select COD payment by default
+  // Resetear y pre-seleccionar Contraentrega al entrar al checkout
   setTimeout(()=>{
-    const codEl=document.getElementById('pf-cod');
-    if(codEl) codEl.classList.add('show');
-    const codOpt=document.getElementById('codOpt');
+    // Quitar selección de todos
+    document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('sel'));
+    document.querySelectorAll('.pay-frm').forEach(f=>f.classList.remove('show'));
+    // Seleccionar Contraentrega por defecto
+    const codOpt = document.getElementById('codOpt');
+    const codFrm = document.getElementById('pf-cod');
     if(codOpt) codOpt.classList.add('sel');
-  },100);
+    if(codFrm) codFrm.classList.add('show');
+  }, 150);
 }
 
 // ═══════════════════════════════════
@@ -1997,46 +1988,89 @@ function updateCoSummary(){
 }
 
 async function confirmOrder(){
-  const name=document.getElementById('coName').value;
-  const city=document.getElementById('coCity').value;
-  if(!name||!city){toast('Completa la información de envío: nombre y ciudad requeridos');coShowStep(1);return;}
-  orderCount++;
-  const num='NS-'+String(Date.now()).slice(-6);
-  document.getElementById('orderNum').textContent='#'+num;
-  const orderData={
-    orderNum:num,
-    customer:{
-      name:name+' '+(document.getElementById('coLast').value||''),
-      email:document.getElementById('coEmail').value,
-      phone:document.getElementById('coPhone').value,
-      dni:document.getElementById('coDni').value,
-    },
-    shipping:{
-      city:city,
-      address:document.getElementById('coAddr').value,
-      barrio:document.getElementById('coBarrio').value,
-      notes:document.getElementById('coNotes').value,
-      cost:SHIPPING[city]?.cost||22000,
-    },
-    items:cart.map(i=>({id:i.id,name:i.name,qty:i.qty,price:i.price,size:i.size||null})),
-    subtotal:getSubtotal(),
-    shippingCost:SHIPPING[city]?.cost||22000,
-    total:getTotal(),
-    status:'pending',
-    payMethod:document.querySelector('.pay-opt.sel .pay-name')?.textContent||'—',
-    createdAt:new Date().toISOString(),
-    userId:fbUser?.uid||'guest',
-  };
-  // Save to Firestore
-  if(window._db){
-    try {
-      const {collection,addDoc,serverTimestamp}=window._fb;
-      await addDoc(collection(window._db,'orders'),{...orderData,ts:serverTimestamp()});
-    } catch(e){ console.warn('Order save error:',e); }
+  // ── 1. Validar información personal y envío ──
+  const name  = (document.getElementById('coName')?.value  || '').trim();
+  const city  = (document.getElementById('coCity')?.value  || '').trim();
+  const addr  = (document.getElementById('coAddr')?.value  || '').trim();
+  const phone = (document.getElementById('coPhone')?.value || '').trim();
+
+  if(!cart.length){ toast('Tu carrito está vacío'); return; }
+  if(!name){ toast('⚠️ Escribe tu nombre'); coShowStep(1); return; }
+  if(!phone){ toast('⚠️ Escribe tu WhatsApp/teléfono'); coShowStep(1); return; }
+  if(!city){ toast('⚠️ Selecciona tu ciudad'); coShowStep(1); return; }
+  if(!addr){ toast('⚠️ Escribe tu dirección'); coShowStep(1); return; }
+
+  // ── 2. Validar que seleccionó método de pago ──
+  const payOpt = document.querySelector('.pay-opt.sel');
+  if(!payOpt){
+    toast('⚠️ Selecciona un método de pago para continuar');
+    return;
   }
-  // Notify via WhatsApp
+  const payMethod = payOpt.querySelector('.pay-name')?.textContent?.trim() || '';
+  if(!payMethod){
+    toast('⚠️ Selecciona un método de pago para continuar');
+    return;
+  }
+
+  // ── 3. Deshabilitar botones mientras procesa ──
+  const btns = document.querySelectorAll('[onclick="confirmOrder()"]');
+  btns.forEach(b=>{ b.disabled=true; b.innerHTML='<i class="fas fa-spinner fa-spin" style="margin-right:6px"></i>Guardando pedido...'; });
+
+  const num     = 'NS-' + String(Date.now()).slice(-6);
+  const sub     = getSubtotal();
+  const shipCst = SHIPPING[city]?.cost ?? 0;
+  const total   = sub + shipCst;
+
+  const orderData = {
+    orderNum: num,
+    customer: {
+      name:  (name + ' ' + (document.getElementById('coLast')?.value||'').trim()).trim(),
+      email: (document.getElementById('coEmail')?.value || '').trim(),
+      phone: phone,
+    },
+    shipping: {
+      city,
+      address: addr,
+      barrio:  (document.getElementById('coBarrio')?.value || '').trim(),
+      notes:   (document.getElementById('coNotes')?.value  || '').trim(),
+      cost:    shipCst,
+    },
+    items:        cart.map(i=>({id:i.id||'',name:i.name,qty:i.qty,price:i.price,size:i.size||null})),
+    subtotal:     sub,
+    shippingCost: shipCst,
+    total:        total,
+    status:       'pending',
+    payMethod:    payMethod,
+    createdAt:    new Date().toISOString(),
+    userId:       fbUser?.uid || 'guest',
+  };
+
+  // ── 4. Guardar en Firebase — OBLIGATORIO antes de continuar ──
+  if(window._db && window._fb){
+    try {
+      const {collection, addDoc, serverTimestamp} = window._fb;
+      await addDoc(collection(window._db,'orders'), {...orderData, ts:serverTimestamp()});
+    } catch(fe){
+      console.error('Firebase error:', fe);
+      // Rehabilitar botones y mostrar error claro
+      btns.forEach(b=>{ b.disabled=false; b.innerHTML='<i class="fas fa-lock" style="margin-right:6px"></i>Confirmar Pedido'; });
+      toast('❌ Error al guardar el pedido. Verifica tu conexión y vuelve a intentarlo.');
+      return; // NO continuar si Firebase falló
+    }
+  } else {
+    // Sin Firebase configurado — no se puede procesar
+    btns.forEach(b=>{ b.disabled=false; b.innerHTML='<i class="fas fa-lock" style="margin-right:6px"></i>Confirmar Pedido'; });
+    toast('❌ Error de conexión con la base de datos. Intenta recargar la página.');
+    return;
+  }
+
+  // ── 5. Firebase guardó OK — notificar y confirmar ──
   notifyWhatsApp(orderData, num);
-  cart=[]; updateCartUI(); coShowStep(3);
+  document.getElementById('orderNum').textContent = '#' + num;
+  cart = [];
+  updateCartUI();
+  btns.forEach(b=>{ b.disabled=false; b.innerHTML='<i class="fas fa-lock" style="margin-right:6px"></i>Confirmar Pedido'; });
+  coShowStep(3);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2046,8 +2080,8 @@ async function confirmOrder(){
 //  2. Envíale este mensaje por WhatsApp: "I allow callmebot to send me messages"
 //  3. Recibirás tu apikey. Reemplaza TU_API_KEY abajo.
 // ═══════════════════════════════════════════════════════
-const CALLMEBOT_PHONE  = '573244518229';   // tu número SIN + ni espacios
-const CALLMEBOT_APIKEY = '7131094';     // ← reemplaza con tu clave
+const CALLMEBOT_PHONE  = '573126450183';   // tu número SIN + ni espacios
+const CALLMEBOT_APIKEY = '7131094';     // ← tu clave CallMeBot
 
 async function notifyWhatsApp(order, num){
   try {
@@ -2071,10 +2105,10 @@ async function notifyWhatsApp(order, num){
       `🕐 ${new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'})}`
     );
 
-    // Si la apikey está configurada, envía silenciosamente
+    // Envío silencioso — funciona sin dominio y sin CORS
     if(CALLMEBOT_APIKEY !== 'TU_API_KEY'){
       const url = `https://api.callmebot.com/whatsapp.php?phone=${CALLMEBOT_PHONE}&text=${msg}&apikey=${CALLMEBOT_APIKEY}`;
-      fetch(url).catch(()=>{}); // silencioso, no bloquea nada
+      new Image().src = url; // truco: img no tiene restricción CORS, la petición llega igual
     }
   } catch(e){ console.warn('WA notify error', e); }
 }
