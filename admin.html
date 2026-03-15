@@ -368,6 +368,7 @@ textarea.fi{resize:vertical;min-height:80px}
       <div class="snav" onclick="showTab('hero',this)"><i class="fas fa-image"></i> Hero / Inicio</div>
       <div class="snav" onclick="showTab('banners',this)"><i class="fas fa-bullhorn"></i> Banners & Promos</div>
       <div class="snav" onclick="showTab('store',this)"><i class="fas fa-store"></i> Info Tienda</div>
+      <div class="snav" onclick="showTab('shipping',this)"><i class="fas fa-truck"></i> Tarifas de Envío</div>
       <div class="snav" onclick="showTab('colors',this)"><i class="fas fa-palette"></i> Colores & Estilo</div>
     </div>
 
@@ -456,14 +457,9 @@ textarea.fi{resize:vertical;min-height:80px}
         <h1 class="page-title">Gestión de <em>Categorías</em></h1>
         <button class="btn btn-primary" onclick="openCatModal()"><i class="fas fa-plus"></i> Nueva Categoría</button>
       </div>
-      <div class="info-box info-blue"><i class="fas fa-info-circle"></i><span>Las categorías que crees aquí aparecen automáticamente en el menú de tu tienda y en el formulario de productos.</span></div>
-      <div class="card">
-        <div class="card-hd"><div class="card-title"><i class="fas fa-tags"></i> Categorías activas</div></div>
-        <div class="card-body" style="padding:22px">
-          <div class="cat-chips" id="catChips"></div>
-          <div class="info-box info-warn" style="margin-bottom:0"><i class="fas fa-exclamation-triangle"></i><span>Eliminar una categoría <strong>no elimina</strong> los productos que la tienen. Solo desaparecerá del menú.</span></div>
-        </div>
-      </div>
+      <div class="info-box info-blue"><i class="fas fa-info-circle"></i><span>Las categorías que crees aquí aparecen automáticamente en el menú de tu tienda. Puedes agregar imagen URL, emoji e icono a cada una.</span></div>
+      <div class="prod-grid" id="catGrid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr))"></div>
+      <div class="info-box info-warn"><i class="fas fa-exclamation-triangle"></i><span>Eliminar una categoría <strong>no elimina</strong> sus productos, solo desaparece del menú.</span></div>
     </div>
 
     <!-- ════ CLIENTES ════ -->
@@ -544,16 +540,6 @@ textarea.fi{resize:vertical;min-height:80px}
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-hd"><div class="card-title"><i class="fas fa-chart-bar"></i> Estadísticas del Hero</div></div>
-        <div class="card-body" style="padding:22px">
-          <div class="frow3">
-            <div><div class="fg"><label>Número 1</label><input class="fi" id="st1n" value="500+"/></div><div class="fg"><label>Texto 1</label><input class="fi" id="st1l" value="Productos"/></div></div>
-            <div><div class="fg"><label>Número 2</label><input class="fi" id="st2n" value="48h"/></div><div class="fg"><label>Texto 2</label><input class="fi" id="st2l" value="Envío rápido"/></div></div>
-            <div><div class="fg"><label>Número 3</label><input class="fi" id="st3n" value="98%"/></div><div class="fg"><label>Texto 3</label><input class="fi" id="st3l" value="Clientes felices"/></div></div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- ════ BANNERS ════ -->
@@ -582,8 +568,8 @@ textarea.fi{resize:vertical;min-height:80px}
         <div class="card-hd"><div class="card-title"><i class="fas fa-fire"></i> Banner de promoción</div></div>
         <div class="card-body" style="padding:22px">
           <div class="frow">
-            <div class="fg"><label>Título del banner</label><input class="fi" id="promoTitle" value="Hasta 40% Off"/></div>
-            <div class="fg"><label>Subtítulo</label><input class="fi" id="promoSub" value="Solo por tiempo limitado"/></div>
+            <div class="fg"><label>Título del banner</label><input class="fi" id="promoTitle" value="Envíos a toda Colombia"/></div>
+            <div class="fg"><label>Subtítulo</label><input class="fi" id="promoSub" value="Empaque 100% discreto · Entrega segura"/></div>
           </div>
           <div class="frow">
             <div class="fg"><label>Botón 1</label><input class="fi" id="promoBt1" value="Ver ofertas"/></div>
@@ -639,6 +625,33 @@ textarea.fi{resize:vertical;min-height:80px}
             <div class="fg"><label>Facebook</label><input class="fi" id="socFB" placeholder="naturalsex.colombia"/></div>
             <div class="fg"><label>WhatsApp link</label><input class="fi" id="socWA" value="573244518229"/></div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ ENVÍOS CONFIGURACIÓN ════ -->
+    <div class="atab" id="tab-shipping">
+      <div class="page-hd">
+        <h1 class="page-title">Tarifas de <em>Envío</em></h1>
+        <button class="btn btn-primary" onclick="saveShipping()"><i class="fas fa-save"></i> Guardar tarifas</button>
+      </div>
+      <div class="info-box info-ok"><i class="fas fa-bolt"></i><span>Edita los precios y tiempos de entrega por ciudad. Los cambios se aplican <strong>al instante</strong> en la tienda.</span></div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title"><i class="fas fa-truck"></i> Barranquilla y área metropolitana (Contraentrega disponible)</div></div>
+        <div class="card-body" style="padding:22px">
+          <div id="shipZone1"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title"><i class="fas fa-shipping-fast"></i> Costa Atlántica</div></div>
+        <div class="card-body" style="padding:22px">
+          <div id="shipZone2"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><div class="card-title"><i class="fas fa-map-marked-alt"></i> Interior del país — Ciudades principales</div></div>
+        <div class="card-body" style="padding:22px">
+          <div id="shipZone3"></div>
         </div>
       </div>
     </div>
@@ -773,18 +786,19 @@ textarea.fi{resize:vertical;min-height:80px}
 </div>
 
 <!-- ══ MODAL CATEGORÍA ══ -->
-<div class="modal-ov" id="catModal">
-  <div class="modal" style="max-width:420px">
+<div class="modal-ov" id="catModal" onclick="if(event.target===this)closeCatModal()">
+  <div class="modal" style="max-width:480px">
     <div class="modal-hd">
-      <h3>Nueva Categoría</h3>
-      <button class="modal-close" onclick="document.getElementById('catModal').classList.remove('open')"><i class="fas fa-times"></i></button>
+      <h3 id="catModalTitle">Nueva Categoría</h3>
+      <button class="modal-close" onclick="closeCatModal()"><i class="fas fa-times"></i></button>
     </div>
     <div class="modal-body">
-      <div class="fg"><label>Nombre de la categoría</label><input class="fi" id="catName" placeholder="Ej: Estimulantes"/></div>
-      <div class="fg"><label>Emoji / Ícono</label><input class="fi" id="catEmoji" placeholder="Ej: 💎" maxlength="4"/><p class="fhint">Un emoji que represente la categoría</p></div>
+      <div class="fg"><label>Nombre de la categoría *</label><input class="fi" id="catName" placeholder="Ej: Estimulantes"/></div>
+      <div class="fg"><label>Emoji / Ícono</label><input class="fi" id="catEmoji" placeholder="Ej: 💎" maxlength="4"/><p class="fhint">Un emoji que represente la categoría visualmente</p></div>
+      <div class="fg"><label>URL de imagen (opcional)</label><input class="fi" id="catImg" placeholder="https://i.ibb.co/tu-imagen.jpg"/><p class="fhint">Sube tu foto a <a href="https://imgbb.com" target="_blank" style="color:var(--vino)">imgbb.com</a> y pega el link aquí</p></div>
       <div style="display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn btn-outline" onclick="document.getElementById('catModal').classList.remove('open')">Cancelar</button>
-        <button class="btn btn-primary" onclick="saveCat()"><i class="fas fa-save"></i> Crear categoría</button>
+        <button class="btn btn-outline" onclick="closeCatModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveCat()"><i class="fas fa-save"></i> <span id="catSaveBtnTxt">Crear categoría</span></button>
       </div>
     </div>
   </div>
@@ -956,6 +970,7 @@ function showTab(id, el){
   if(tab) tab.classList.add('act');
   if(el) el.classList.add('act');
   else { document.querySelectorAll('.snav').forEach(n=>{ if(n.textContent.trim().toLowerCase().includes(id)) n.classList.add('act'); }); }
+  if(id==='shipping') initShippingTab();
 }
 
 // ══════════════════════════════════
@@ -1029,6 +1044,8 @@ function openOrder(docId){
     <div style="margin-bottom:20px">
       <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--gray);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--lgray)">📦 Productos del pedido</h4>
       ${(o.items||[]).map(i=>`<div style="display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0;border-bottom:1px solid var(--lgray)"><span>${i.qty}× ${i.name}</span><span style="font-weight:600">$${((i.price||0)*i.qty).toLocaleString('es-CO')}</span></div>`).join('')}
+      <div style="display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0;border-bottom:1px solid var(--lgray);color:var(--gray)"><span>Subtotal productos</span><span>$${(o.subtotal||0).toLocaleString('es-CO')}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0;border-bottom:1px solid var(--lgray);color:var(--gray)"><span>Costo de envío (${o.shipping?.city||'—'})</span><span>$${(o.shippingCost||o.shipping?.cost||0).toLocaleString('es-CO')}</span></div>
       <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding-top:12px;color:var(--vino)"><span>TOTAL</span><span>$${(o.total||0).toLocaleString('es-CO')}</span></div>
     </div>
     <div style="margin-bottom:20px">
@@ -1294,6 +1311,89 @@ async function deleteProd(docId){
 // ══════════════════════════════════
 // CATEGORÍAS
 // ══════════════════════════════════
+// SHIPPING CONFIG
+// ══════════════════════════════════
+const DEFAULT_SHIPPING = [
+  {zone:'barranquilla', city:'Barranquilla', cost:0, label:'24 horas', cod:true},
+  {zone:'barranquilla', city:'Soledad', cost:0, label:'24 horas', cod:true},
+  {zone:'barranquilla', city:'Puerto Colombia', cost:0, label:'24 horas', cod:true},
+  {zone:'barranquilla', city:'Malambo', cost:10000, label:'48 horas', cod:false},
+  {zone:'barranquilla', city:'Galapa', cost:10000, label:'48 horas', cod:false},
+  {zone:'costa', city:'Cartagena', cost:9900, label:'2 días hábiles', cod:false},
+  {zone:'costa', city:'Santa Marta', cost:9900, label:'2 días hábiles', cod:false},
+  {zone:'costa', city:'Valledupar', cost:10900, label:'2–3 días hábiles', cod:false},
+  {zone:'costa', city:'Riohacha', cost:10900, label:'2–3 días hábiles', cod:false},
+  {zone:'costa', city:'Montería', cost:12900, label:'2–3 días hábiles', cod:false},
+  {zone:'costa', city:'Sincelejo', cost:11900, label:'2–3 días hábiles', cod:false},
+  {zone:'interior', city:'Bogotá', cost:14900, label:'2–3 días hábiles', cod:false},
+  {zone:'interior', city:'Medellín', cost:13900, label:'2–3 días hábiles', cod:false},
+  {zone:'interior', city:'Cali', cost:15900, label:'3–4 días hábiles', cod:false},
+  {zone:'interior', city:'Bucaramanga', cost:13900, label:'2–3 días hábiles', cod:false},
+  {zone:'interior', city:'Cúcuta', cost:16900, label:'3–4 días hábiles', cod:false},
+  {zone:'interior', city:'Pereira', cost:15900, label:'3–4 días hábiles', cod:false},
+  {zone:'interior', city:'Manizales', cost:15900, label:'3–4 días hábiles', cod:false},
+  {zone:'interior', city:'Armenia', cost:16900, label:'3–4 días hábiles', cod:false},
+  {zone:'interior', city:'Ibagué', cost:16900, label:'3–4 días hábiles', cod:false},
+  {zone:'interior', city:'Neiva', cost:17900, label:'3–4 días hábiles', cod:false},
+  {zone:'interior', city:'Pasto', cost:19900, label:'4–5 días hábiles', cod:false},
+  {zone:'interior', city:'Villavicencio', cost:17900, label:'3–4 días hábiles', cod:false},
+  {zone:'interior', city:'Tunja', cost:16900, label:'3–4 días hábiles', cod:false},
+  {zone:'interior', city:'Otra ciudad', cost:18900, label:'3–6 días hábiles', cod:false},
+];
+
+let shippingData = [...DEFAULT_SHIPPING];
+
+function renderShippingZone(zone, containerId){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  const rows = shippingData.filter(s=>s.zone===zone);
+  el.innerHTML = `<table class="tbl" style="width:100%">
+    <thead><tr><th>Ciudad</th><th>Costo (COP)</th><th>Tiempo estimado</th><th>Contraentrega</th></tr></thead>
+    <tbody>
+      ${rows.map(s=>`<tr>
+        <td><strong>${s.city}</strong></td>
+        <td><input type="number" value="${s.cost}" min="0" step="100" 
+            style="width:110px;padding:6px 8px;border:1.5px solid var(--border);border-radius:4px;font-size:13px"
+            onchange="updateShipRow('${s.city}','cost',this.value)"/></td>
+        <td><input type="text" value="${s.label}"
+            style="width:180px;padding:6px 8px;border:1.5px solid var(--border);border-radius:4px;font-size:13px"
+            onchange="updateShipRow('${s.city}','label',this.value)"/></td>
+        <td style="text-align:center">
+          <input type="checkbox" ${s.cod?'checked':''} style="width:16px;height:16px;accent-color:var(--vino)"
+            onchange="updateShipRow('${s.city}','cod',this.checked)"/>
+        </td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function updateShipRow(city, field, value){
+  const row = shippingData.find(s=>s.city===city);
+  if(!row) return;
+  if(field==='cost') row.cost = parseInt(value)||0;
+  else if(field==='label') row.label = value;
+  else if(field==='cod') row.cod = !!value;
+}
+
+async function saveShipping(){
+  if(window._db){
+    try {
+      const {doc,setDoc}=window._fb2;
+      await setDoc(doc(window._db,'siteConfig','shipping'),{cities:shippingData,updatedAt:Date.now()});
+      aToast('✓ Tarifas de envío guardadas y publicadas');
+    } catch(e){ aToast('Error al guardar: '+e.message); }
+  } else {
+    aToast('✓ Tarifas actualizadas (local)');
+  }
+}
+
+function initShippingTab(){
+  renderShippingZone('barranquilla','shipZone1');
+  renderShippingZone('costa','shipZone2');
+  renderShippingZone('interior','shipZone3');
+}
+
+// ══════════════════════════════════
 function renderCats(){
   const el=document.getElementById('catChips');
   el.innerHTML=allCats.map(c=>`
@@ -1315,24 +1415,61 @@ function populateCatSelects(){
   populateCatFilter();
 }
 
-function openCatModal(){ document.getElementById('catName').value=''; document.getElementById('catEmoji').value=''; document.getElementById('catModal').classList.add('open'); }
+let editingCatId = null;
+
+function openCatModal(){
+  editingCatId = null;
+  document.getElementById('catModalTitle').textContent = 'Nueva Categoría';
+  document.getElementById('catSaveBtnTxt').textContent = 'Crear categoría';
+  document.getElementById('catName').value = '';
+  document.getElementById('catEmoji').value = '';
+  const imgEl = document.getElementById('catImg');
+  if(imgEl) imgEl.value = '';
+  document.getElementById('catModal').classList.add('open');
+}
+
+function closeCatModal(){ document.getElementById('catModal').classList.remove('open'); }
+
+function editCat(docId){
+  const c = allCats.find(x=>x.docId===docId); if(!c)return;
+  editingCatId = docId;
+  document.getElementById('catModalTitle').textContent = 'Editar Categoría';
+  document.getElementById('catSaveBtnTxt').textContent = 'Guardar cambios';
+  document.getElementById('catName').value = c.name||'';
+  document.getElementById('catEmoji').value = c.emoji||'';
+  const imgEl = document.getElementById('catImg');
+  if(imgEl) imgEl.value = c.img||'';
+  document.getElementById('catModal').classList.add('open');
+}
 
 async function saveCat(){
-  const name=document.getElementById('catName').value.trim();
-  const emoji=document.getElementById('catEmoji').value.trim()||'📦';
+  const name  = document.getElementById('catName').value.trim();
+  const emoji = document.getElementById('catEmoji').value.trim()||'📦';
+  const imgEl = document.getElementById('catImg');
+  const img   = imgEl ? imgEl.value.trim() : '';
   if(!name){ aToast('Escribe el nombre de la categoría'); return; }
-  if(allCats.find(c=>c.name.toLowerCase()===name.toLowerCase())){ aToast('Esa categoría ya existe'); return; }
   if(window._db){
     try{
-      const {collection,addDoc}=window._fb2;
-      await addDoc(collection(window._db,'categories'),{name,emoji});
-      aToast('✓ Categoría "'+name+'" creada — ya aparece en tu tienda');
+      if(editingCatId && !editingCatId.startsWith('dc')){
+        const {doc,updateDoc}=window._fb2;
+        await updateDoc(doc(window._db,'categories',editingCatId),{name,emoji,img});
+        aToast('✓ Categoría "'+name+'" actualizada');
+      } else {
+        const {collection,addDoc}=window._fb2;
+        await addDoc(collection(window._db,'categories'),{name,emoji,img,ts:Date.now()});
+        aToast('✓ Categoría "'+name+'" creada — ya aparece en tu tienda');
+      }
     } catch(e){ aToast('Error: '+e.message); }
   } else {
-    allCats.push({docId:'dc_'+Date.now(),name,emoji});
-    renderCats(); populateCatSelects(); aToast('✓ Categoría creada');
+    if(editingCatId){
+      const c=allCats.find(x=>x.docId===editingCatId);
+      if(c){c.name=name;c.emoji=emoji;c.img=img;}
+    } else {
+      allCats.push({docId:'dc_'+Date.now(),name,emoji,img});
+    }
+    renderCats(); populateCatSelects(); aToast('✓ '+(editingCatId?'Actualizada':'Creada')+': '+name);
   }
-  document.getElementById('catModal').classList.remove('open');
+  closeCatModal();
 }
 
 async function deleteCat(docId){
@@ -1404,18 +1541,31 @@ function loadBannersForm(data){
   if(data.promoSub) document.getElementById('promoSub').value=data.promoSub;
   updateAnnPrev();
 }
+// Fix toggle: read state properly
+function getToggleOn(id){
+  return document.getElementById(id).classList.contains('on');
+}
+
 async function saveBanners(){
-  const data={
-    annL:document.getElementById('annL').value,
-    annR:document.getElementById('annR').value,
-    annOn:document.getElementById('annToggle').classList.contains('on'),
-    promoTitle:document.getElementById('promoTitle').value,
-    promoSub:document.getElementById('promoSub').value,
-    promoBt1:document.getElementById('promoBt1').value,
-    promoBt2:document.getElementById('promoBt2').value,
-    promoOn:document.getElementById('promoToggle').classList.contains('on'),
+  const annOn = document.getElementById('annToggle').classList.contains('on');
+  const promoOn = document.getElementById('promoToggle').classList.contains('on');
+  const data = {
+    annL: document.getElementById('annL').value,
+    annR: document.getElementById('annR').value,
+    annOn,
+    promoTitle: document.getElementById('promoTitle').value,
+    promoSub: document.getElementById('promoSub').value,
+    promoOn,
   };
-  await saveSiteConfig('banners',data,'Banners guardados ✓');
+  if(window._db){
+    try {
+      const {doc,setDoc}=window._fb2;
+      await setDoc(doc(window._db,'siteConfig','banners'),data);
+      aToast('✓ Banners guardados y publicados');
+    } catch(e){ aToast('Error: '+e.message); }
+  } else {
+    aToast('✓ Banners actualizados (sin Firebase)');
+  }
 }
 
 // ══════════════════════════════════

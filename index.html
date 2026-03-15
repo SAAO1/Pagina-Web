@@ -85,6 +85,7 @@ header{background:var(--vino);padding:0 40px;position:sticky;top:0;z-index:900;
   box-shadow:0 2px 24px rgba(0,0,0,.25)}
 .hdr{max-width:1360px;margin:0 auto;display:flex;align-items:center;
   justify-content:space-between;height:68px;gap:16px}
+.mob-btn{order:-1}
 .logo{font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:700;
   color:var(--white);cursor:pointer;letter-spacing:1.5px;display:flex;align-items:center;gap:6px}
 .logo em{color:var(--gold);font-style:normal}
@@ -274,7 +275,7 @@ section{padding:78px 40px}
 .cc:hover .cc-ov{background:rgba(61,10,20,.75)}
 .cc:hover .cc-img{transform:scale(1.07)}
 .cc:hover .cc-btn{opacity:1;transform:translateY(0)}
-.cc-img{width:100%;height:100%;transition:transform .4s ease;display:flex;align-items:center;justify-content:center}
+.cc-img{width:100%;height:100%;transition:transform .4s ease;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
 .bg1{background:linear-gradient(160deg,#2a0a14,#6B1A2A)}
 .bg2{background:linear-gradient(160deg,#1a1230,#4a1a5a)}
 .bg3{background:linear-gradient(160deg,#0d2137,#0f4a6a)}
@@ -659,10 +660,10 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
 }
 @media(max-width:640px){
   /* Header */
-  header{padding:0 14px}
+  header{padding:0 12px}
   nav{display:none}
-  .mob-btn{display:block}
-  .hdr{height:58px}
+  .mob-btn{display:block;margin-right:4px;margin-left:0;order:-1}
+  .hdr{height:58px;gap:10px}
   .logo{font-size:22px}
   .hdr-icon{font-size:16px}
 
@@ -716,6 +717,28 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
 
   /* Hero stats */
   .hero-stats{flex-wrap:wrap;gap:18px}
+
+  /* Profile mobile */
+  .pfl-layout{padding:16px}
+  .addr-grid{grid-template-columns:1fr}
+  .wish-grid{grid-template-columns:1fr 1fr}
+
+  /* Checkout mobile */
+  .co-layout{grid-template-columns:1fr}
+  .co-sum{position:static}
+  .co-wrap{padding:16px}
+  .pay-opts{grid-template-columns:1fr 1fr}
+
+  /* Cart sidebar mobile */
+  .cart-sb{width:100%}
+
+  /* Toast mobile */
+  .toast{bottom:70px;right:12px;left:12px;width:auto}
+
+  /* WA float mobile */
+  .wa-float{bottom:16px;right:14px}
+  .wa-btn{width:48px;height:48px}
+  .wa-lbl{display:none}
 }
 @media(max-width:380px){
   .pg{grid-template-columns:1fr 1fr}
@@ -743,6 +766,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
 <!-- HEADER -->
 <header>
   <div class="hdr">
+    <button class="mob-btn" onclick="openMobMenu()" aria-label="Menú" style="margin-right:8px"><i class="fas fa-bars"></i></button>
     <div class="logo" onclick="go('home')">Natural<em>Sex</em><span class="logo-gem"></span></div>
     <nav>
       <div class="ni ddp">
@@ -785,7 +809,6 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
       <div class="ni" onclick="goCat('Ofertas')">Ofertas</div>
       <div class="ni" onclick="go('home')">Inicio</div>
     </nav>
-    <button class="mob-btn" onclick="openMobMenu()" aria-label="Menú"><i class="fas fa-bars"></i></button>
     <div class="hdr-icons">
       <button class="hdr-icon" onclick="openSearch()"><i class="fas fa-search"></i></button>
       <button class="hdr-icon" onclick="toggleAuth()" id="userIcon"><i class="fas fa-user"></i></button>
@@ -907,7 +930,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
     <div class="hero-lines"></div>
     <div class="hero-inner">
       <div>
-        <div class="hero-badge"><i class="fas fa-leaf"></i> Nueva Colección 2025</div>
+        <div class="hero-badge"><i class="fas fa-leaf"></i> Nueva Colección 2026</div>
         <h1>Descubre el<br/><em>placer</em> que<br/>mereces</h1>
         <p class="hero-p">Tu tienda íntima de confianza en Barranquilla. Productos de alta calidad para ti y tu pareja. Envíos discretos a toda Colombia.</p>
         <div class="hero-btns">
@@ -923,7 +946,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
       <div class="hero-visual">
         <div class="hero-card"><div class="hc-icon"><i class="fas fa-shipping-fast"></i></div><div class="hc-label">Envío Express</div><div class="hc-val">24h</div><div class="hc-sub">Barranquilla y área metro</div></div>
         <div class="hero-card" style="margin-right:34px"><div class="hc-icon"><i class="fas fa-box"></i></div><div class="hc-label">Empaque</div><div class="hc-val">Discreto</div><div class="hc-sub">Sin logos ni indicaciones</div></div>
-        <div class="hero-card"><div class="hc-icon"><i class="fas fa-shield-alt"></i></div><div class="hc-label">Pago Seguro</div><div class="hc-val">SSL</div><div class="hc-sub">Wompi · PSE · Nequi</div></div>
+        <div class="hero-card"><div class="hc-icon"><i class="fas fa-shield-alt"></i></div><div class="hc-label">Pago Seguro</div><div class="hc-val">SSL</div><div class="hc-sub">PSE Bancolombia · Contraentrega</div></div>
       </div>
     </div>
   </div>
@@ -931,7 +954,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
   <section style="background:var(--off)">
     <div class="sec">
       <div class="sh"><span class="stag">Explorar</span><h2 class="stitle">Nuestras <em>Categorías</em></h2></div>
-      <div class="cat-grid">
+      <div class="cat-grid" id="homeCatGrid" style="grid-template-columns:repeat(4,1fr)">
         <div class="cc" onclick="goCat('Juguetes')"><div class="cc-img bg1"><i class="fas fa-heart cc-ico"></i></div><div class="cc-ov"><div class="cc-name">Juguetes</div><div class="cc-cnt" id="cnt-juguetes">Cargando...</div><button class="cc-btn">Ver más <i class="fas fa-arrow-right"></i></button></div></div>
         <div class="cc" onclick="goCat('Lencería')"><div class="cc-img bg2"><i class="fas fa-star cc-ico"></i></div><div class="cc-ov"><div class="cc-name">Lencería</div><div class="cc-cnt" id="cnt-lenceria">Cargando...</div><button class="cc-btn">Ver más <i class="fas fa-arrow-right"></i></button></div></div>
         <div class="cc" onclick="goCat('Lubricantes')"><div class="cc-img bg3"><i class="fas fa-tint cc-ico"></i></div><div class="cc-ov"><div class="cc-name">Lubricantes</div><div class="cc-cnt" id="cnt-lubricantes">Cargando...</div><button class="cc-btn">Ver más <i class="fas fa-arrow-right"></i></button></div></div>
@@ -950,7 +973,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
   <div class="promo-banner">
     <div class="pb-inner">
       <div class="pb-text">
-        <h2>Envíos a <em>toda Colombia</em></h2>
+        <h2 id="promoBannerTitle">Envíos a <em>toda Colombia</em></h2>
         <p>Empaque 100% discreto · Entrega segura a tu puerta</p>
       </div>
       <div class="pb-btns">
@@ -973,15 +996,16 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
           <span class="s-stag">Visítanos</span>
           <h2 class="s-title">Nuestra <em>tienda</em><br/>en Barranquilla</h2>
           <div class="s-det"><i class="fas fa-map-marker-alt"></i><p><strong>Dirección</strong><br/>Cra. 44 No. 39-31, Barranquilla, Colombia</p></div>
-          <div class="s-det"><i class="fas fa-clock"></i><p><strong>Horario</strong><br/>Lun – Sáb: 10am – 8pm · Dom: 11am – 6pm</p></div>
+          <div class="s-det"><i class="fas fa-clock"></i><p><strong>Horario</strong><br/>Lun – Sáb: 8am – 6pm · Dom: 9am – 2pm</p></div>
           <div class="s-det"><i class="fab fa-whatsapp"></i><p><strong>WhatsApp</strong><br/>+57 324 451 8229</p></div>
           <a href="https://wa.me/573244518229" target="_blank" style="display:inline-flex;align-items:center;gap:9px;background:#25D366;color:#fff;padding:12px 24px;border-radius:3px;font-size:12.5px;font-weight:600;margin-top:16px;text-decoration:none"><i class="fab fa-whatsapp"></i> Contactar por WhatsApp</a>
           <div class="disc-badge"><i class="fas fa-lock"></i> Empaque 100% discreto garantizado</div>
         </div>
-        <div class="map-ph">
-          <i class="fas fa-map-marked-alt"></i>
-          <p>Cra. 44 No. 39-31, Barranquilla</p>
-          <a href="https://maps.google.com/?q=Cra+44+39-31+Barranquilla" target="_blank"><i class="fas fa-external-link-alt"></i> Abrir en Google Maps</a>
+        <div class="map-ph" style="padding:0;overflow:hidden;border-radius:10px;min-height:320px">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3926.357!2d-74.8145!3d11.0041!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ef42d5e2f3c2b9b%3A0x1a2b3c4d5e6f7a8b!2sCra.%2044%20%2339-31%2C%20Barranquilla%2C%20Atl%C3%A1ntico%2C%20Colombia!5e0!3m2!1ses!2sco!4v1700000000000"
+            width="100%" height="340" style="border:0;display:block;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade" title="NaturalSex ubicación"></iframe>
         </div>
       </div>
     </div>
@@ -1020,16 +1044,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
         <div class="fbox-t">Categoría <i class="fas fa-chevron-down" style="font-size:9px"></i></div>
         <div class="fbox-b" id="catFilterList"></div>
       </div>
-      <div class="fbox">
-        <div class="fbox-t">Talla <i class="fas fa-chevron-down" style="font-size:9px"></i></div>
-        <div class="fbox-b">
-          <div class="fopt"><input type="checkbox"/><label>XS</label></div>
-          <div class="fopt"><input type="checkbox"/><label>S</label></div>
-          <div class="fopt"><input type="checkbox"/><label>M</label></div>
-          <div class="fopt"><input type="checkbox"/><label>L</label></div>
-          <div class="fopt"><input type="checkbox"/><label>XL</label></div>
-        </div>
-      </div>
+
     </aside>
     <main>
       <div class="cat-tb">
@@ -1191,7 +1206,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
               <div class="ship-info" id="shipInfo"></div>
               <div class="cod-note" id="codNote">
                 <i class="fas fa-check-circle"></i>
-                <span>Pago contra entrega disponible para <strong>Barranquilla y Soledad</strong>. Pagas en efectivo al recibir tu pedido.</span>
+                <span>Pago contraentrega disponible en <strong>Barranquilla, Soledad y Puerto Colombia</strong>. Pagas en efectivo al recibir. ✅ Sin adelantos.</span>
               </div>
             </div>
             <div class="fg"><label class="flbl">Dirección completa</label><input class="fin" id="coAddr" placeholder="Calle, Carrera, número de casa/apto..."/></div>
@@ -1223,79 +1238,41 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
           </div>
           <div class="co-sec">
             <div class="co-st"><i class="fas fa-credit-card"></i> Método de Pago</div>
-            <div class="pay-opts">
-              <div class="pay-opt sel" onclick="selPay('card',this)">
-                <i class="fas fa-credit-card pay-icon"></i>
-                <div class="pay-name">Tarjeta</div>
-                <div class="pay-sub">Crédito / Débito<br/><span style="font-size:10px;color:var(--gold)">vía Wompi</span></div>
+            <div class="pay-opts" style="grid-template-columns:1fr 1fr">
+              <div class="pay-opt sel" id="codOpt" onclick="selPay('cod',this)">
+                <i class="fas fa-money-bill-wave pay-icon"></i>
+                <div class="pay-name">Contraentrega</div>
+                <div class="pay-sub">Pago en efectivo<br/>al recibir</div>
               </div>
               <div class="pay-opt" onclick="selPay('pse',this)">
                 <i class="fas fa-university pay-icon"></i>
-                <div class="pay-name">PSE</div>
+                <div class="pay-name">PSE — Bancolombia</div>
                 <div class="pay-sub">Transferencia<br/>bancaria</div>
-              </div>
-              <div class="pay-opt" onclick="selPay('nequi',this)">
-                <i class="fas fa-mobile-alt pay-icon"></i>
-                <div class="pay-name">Nequi</div>
-                <div class="pay-sub">Nequi /<br/>Daviplata</div>
-              </div>
-              <div class="pay-opt" id="codOpt" onclick="selPay('cod',this)">
-                <i class="fas fa-money-bill-wave pay-icon"></i>
-                <div class="pay-name">Contra Entrega</div>
-                <div class="pay-sub">Barranquilla, Soledad<br/>y Puerto Colombia</div>
-              </div>
-            </div>
-            <!-- CARD -->
-            <div class="pay-frm show" id="pf-card">
-              <div class="fg"><label class="flbl">Número de Tarjeta</label><input class="fin" placeholder="0000 0000 0000 0000" maxlength="19" oninput="fmtCard(this)"/></div>
-              <div class="card-row">
-                <div class="fg"><label class="flbl">Titular</label><input class="fin" placeholder="Como aparece en la tarjeta"/></div>
-                <div class="fg"><label class="flbl">Vencimiento</label><input class="fin" placeholder="MM/AA" maxlength="5"/></div>
-                <div class="fg"><label class="flbl">CVV</label><input class="fin" placeholder="123" maxlength="4"/></div>
-              </div>
-              <div style="background:rgba(107,26,42,.05);border:1px solid var(--border);border-radius:6px;padding:11px 14px;font-size:12px;color:var(--gray);display:flex;align-items:center;gap:8px">
-                <i class="fas fa-shield-alt" style="color:var(--vino)"></i> Pagos procesados de forma segura por <strong style="color:var(--text)">Wompi</strong> · SSL
-              </div>
-            </div>
-            <!-- PSE -->
-            <div class="pay-frm" id="pf-pse">
-              <div class="fg"><label class="flbl">Banco</label>
-                <select class="fin"><option>Selecciona tu banco...</option><option>Bancolombia</option><option>Davivienda</option><option>BBVA Colombia</option><option>Banco de Bogotá</option><option>AV Villas</option><option>Banco Popular</option><option>Banco de Occidente</option><option>Banco Agrario</option></select>
-              </div>
-              <div class="fg"><label class="flbl">Tipo de persona</label><select class="fin"><option>Persona Natural</option><option>Persona Jurídica</option></select></div>
-              <div class="fg"><label class="flbl">Número de Cédula</label><input class="fin" placeholder="Número de identificación"/></div>
-              <div style="background:rgba(52,152,219,.07);border:1px solid rgba(52,152,219,.2);border-radius:6px;padding:11px 14px;font-size:12px;color:var(--gray)">
-                <i class="fas fa-info-circle" style="color:#2980b9;margin-right:5px"></i> Serás redirigido al portal de tu banco para completar el pago.
-              </div>
-            </div>
-            <!-- NEQUI / DAVIPLATA / BANCOLOMBIA -->
-            <div class="pay-frm" id="pf-nequi">
-              <div class="fg">
-                <label class="flbl">Plataforma de pago</label>
-                <select class="fin" id="nequiPlatform" onchange="updateNequiInfo()">
-                  <option value="nequi">Nequi</option>
-                  <option value="daviplata">Daviplata</option>
-                  <option value="bancolombia">Bancolombia (Transfiya)</option>
-                </select>
-              </div>
-              <div id="nequiInfo" style="background:rgba(149,52,150,.07);border:1px solid rgba(149,52,150,.2);border-radius:8px;padding:14px 16px;font-size:13px;margin-bottom:12px">
-                <div style="font-weight:700;margin-bottom:6px;color:#5a1a6a">📱 Envía tu pago a Nequi</div>
-                <div style="margin-bottom:4px">Número: <strong id="nequiNum">+57 324 451 8229</strong></div>
-                <div style="margin-bottom:4px">A nombre de: <strong>NaturalSex</strong></div>
-                <div style="font-size:11.5px;color:#888;margin-top:8px">⚠️ Una vez realizado el pago, sube el comprobante aquí abajo o envíalo por WhatsApp.</div>
-              </div>
-              <div class="fg">
-                <label class="flbl">Comprobante de pago (foto/captura)</label>
-                <input type="file" accept="image/*" id="nequiComprobante" class="fin" style="padding:8px"/>
-                <p style="font-size:11.5px;color:var(--gray);margin-top:4px">También puedes enviarlo por <a href="https://wa.me/573244518229" target="_blank" style="color:var(--vino);font-weight:600">WhatsApp</a></p>
               </div>
             </div>
             <!-- COD -->
-            <div class="pay-frm" id="pf-cod">
-              <div style="background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.25);border-radius:6px;padding:14px 17px">
-                <i class="fas fa-check-circle" style="color:var(--ok);margin-right:7px"></i>
-                <strong>Pago en efectivo al recibir</strong>
-                <p style="margin-top:7px;font-size:12px;color:var(--gray);line-height:1.6">Solo disponible en <strong>Barranquilla, Soledad y Puerto Colombia</strong>. Tiempo de entrega: 1–2 días hábiles. Ten el dinero exacto al momento de la entrega.</p>
+            <div class="pay-frm show" id="pf-cod">
+              <div style="background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.25);border-radius:8px;padding:16px 18px">
+                <div style="font-size:14px;font-weight:700;margin-bottom:8px;color:#1a5a30"><i class="fas fa-check-circle" style="color:var(--ok);margin-right:7px"></i>Pago en efectivo al recibir</div>
+                <div style="font-size:13px;color:var(--text);line-height:1.7;margin-bottom:8px">Pagas <strong>en efectivo</strong> cuando tu pedido llegue a tu puerta. Sin tarjetas, sin adelantos.</div>
+                <div style="font-size:12px;color:var(--gray);line-height:1.6">📍 Disponible en <strong>Barranquilla, Soledad y Puerto Colombia</strong><br/>⏱ Entrega en <strong>24 horas</strong> · Empaque 100% discreto</div>
+              </div>
+            </div>
+            <!-- PSE / BANCOLOMBIA -->
+            <div class="pay-frm" id="pf-pse">
+              <div style="background:rgba(255,193,7,.07);border:1px solid rgba(255,193,7,.35);border-radius:8px;padding:16px 18px;margin-bottom:14px">
+                <div style="font-size:14px;font-weight:700;margin-bottom:10px;color:#7a5000"><i class="fas fa-university" style="margin-right:7px"></i>🏦 Transferencia PSE — Bancolombia</div>
+                <div style="font-size:13px;line-height:1.8;margin-bottom:4px">Número de cuenta: <strong style="color:var(--text)">XXXXXXXXXX</strong> <span style="font-size:11px;color:var(--gray)">(agrega tu número real en el código)</span></div>
+                <div style="font-size:13px;line-height:1.8;margin-bottom:4px">Tipo: <strong>Cuenta de Ahorros</strong></div>
+                <div style="font-size:13px;line-height:1.8;margin-bottom:4px">Titular: <strong>NaturalSex</strong></div>
+                <div style="font-size:13px;line-height:1.8">Cédula/NIT: <strong>XXXXXXXXXX</strong></div>
+                <div style="margin-top:10px;padding:10px;background:rgba(0,0,0,.04);border-radius:6px;font-size:12px;color:#666">
+                  📸 Después de transferir, envía el comprobante por <a href="https://wa.me/573244518229" target="_blank" style="color:var(--vino);font-weight:600">WhatsApp</a> para confirmar tu pedido.
+                </div>
+              </div>
+              <div class="fg">
+                <label class="flbl">Nombre del titular que realizó la transferencia</label>
+                <input class="fin" id="pseNombre" placeholder="Tu nombre completo"/>
               </div>
             </div>
           </div>
@@ -1373,7 +1350,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
             <div class="addr-txt">Agrega tu dirección en el próximo pedido</div>
           </div>
         </div>
-        <button class="btn-add-addr" onclick="toast('Función disponible próximamente')"><i class="fas fa-plus"></i> Agregar dirección</button>
+        <button class="btn-add-addr" onclick="openAddAddr()"><i class="fas fa-plus"></i> Agregar dirección</button>
       </div>
       <div class="ptab" id="ptab-wishlist">
         <h2 class="ptitle">Lista de <em>Deseos</em></h2>
@@ -1404,7 +1381,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
         <div class="ft-slogan">Placer · Bienestar · Confianza</div>
         <div class="ft-contact">
           <p><i class="fab fa-whatsapp"></i> +57 324 451 8229</p>
-          <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b7d9d6c3c2c5d6db99c4d2cf878786f7d0dad6dedb99d4d8da">[email&#160;protected]</a></p>
+          <p><i class="fas fa-envelope"></i> natural.sex001@gmail.com</p>
           <p><i class="fas fa-map-marker-alt"></i> Cra. 44 No. 39-31, Barranquilla</p>
         </div>
         <div class="disc-badge" style="margin-top:14px"><i class="fas fa-lock"></i> Compra segura y discreta</div>
@@ -1415,25 +1392,16 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
           <a class="soc" href="https://instagram.com/naturalsex01" target="_blank"><i class="fab fa-instagram"></i></a>
           <a class="soc" href="https://wa.me/573244518229" target="_blank"><i class="fab fa-whatsapp"></i></a>
         </div>
-        <div class="ft-h" style="margin-top:18px">Recibe Ofertas</div>
-        <p style="font-size:12px;margin-bottom:9px;color:rgba(255,255,255,.5)">Suscríbete y recibe novedades en tu correo</p>
-        <div class="nl-form">
-          <input class="nl-in" id="nlEmail" type="email" placeholder="tu@correo.com"/>
-          <button class="nl-btn" onclick="subscribe()">OK</button>
+        <div class="ft-h" style="margin-top:22px">Pagos Aceptados</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+          <div style="display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.65);font-size:13px"><i class="fas fa-money-bill-wave" style="color:var(--gold)"></i> Contraentrega</div>
+          <div style="display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.65);font-size:13px"><i class="fas fa-university" style="color:var(--gold)"></i> PSE — Bancolombia</div>
+          <div style="display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.65);font-size:13px"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Pago 100% seguro</div>
         </div>
-        <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:7px" id="nlMsg"></div>
       </div>
       <div>
-        <div class="ft-h">Políticas</div>
-        <div class="ft-links">
-          <a>Condiciones de Uso</a>
-          <a>Promesas de Envío</a>
-          <a>Política de Datos</a>
-          <a>Garantías y Devoluciones</a>
-          <a>Preguntas Frecuentes</a>
-        </div>
-        <div class="ft-h" style="margin-top:18px">Categorías</div>
-        <div class="ft-links">
+        <div class="ft-h">Categorías</div>
+        <div class="ft-links" id="ftCatLinks">
           <a onclick="goCat('Juguetes')">Juguetes</a>
           <a onclick="goCat('Lencería')">Lencería</a>
           <a onclick="goCat('Lubricantes')">Lubricantes</a>
@@ -1442,7 +1410,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
       </div>
     </div>
     <div class="ft-bot">
-      <span>© 2025 NaturalSex — Barranquilla, Colombia. Todos los derechos reservados.</span>
+      <span>© 2026 NaturalSex — Barranquilla, Colombia. Todos los derechos reservados.</span>
       <div><a>Privacidad</a><a>Términos</a></div>
     </div>
   </div>
@@ -1459,47 +1427,37 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
 // SHIPPING CONFIG
 // ═══════════════════════════════════
 const SHIPPING = {
-  'Barranquilla':    {cost:8000,  cod:true,  label:'Express 24–48h'},
-  'Soledad':         {cost:8000,  cod:true,  label:'Express 24–48h'},
-  'Puerto Colombia': {cost:8000,  cod:true,  label:'Express 24–48h'},
-  'Malambo':         {cost:10000, cod:false, label:'1–2 días'},
-  'Galapa':          {cost:10000, cod:false, label:'1–2 días'},
-  'Puerto Colombia': {cost:10000, cod:false, label:'1–2 días'},
-  'Cartagena':       {cost:14000, cod:false, label:'2–3 días'},
-  'Santa Marta':     {cost:14000, cod:false, label:'2–3 días'},
-  'Montería':        {cost:16000, cod:false, label:'3–4 días'},
-  'Sincelejo':       {cost:16000, cod:false, label:'3–4 días'},
-  'Valledupar':      {cost:16000, cod:false, label:'3–4 días'},
-  'Riohacha':        {cost:16000, cod:false, label:'3–4 días'},
-  'Mompox':          {cost:18000, cod:false, label:'4–5 días'},
-  'Lorica':          {cost:16000, cod:false, label:'3–4 días'},
-  'Bogotá':          {cost:18000, cod:false, label:'2–3 días'},
-  // ── Ciudades principales ─── tarifas Interrapidísimo 2025-2026 desde Barranquilla (hasta 1kg)
-  'Bogotá':          {cost:14900, cod:false, label:'1–2 días hábiles'},
-  'Medellín':        {cost:13900, cod:false, label:'1–2 días hábiles'},
-  'Cali':            {cost:15900, cod:false, label:'2–3 días hábiles'},
-  'Bucaramanga':     {cost:13900, cod:false, label:'1–2 días hábiles'},
-  'Cartagena':       {cost:9900,  cod:false, label:'1 día hábil'},
-  'Santa Marta':     {cost:9900,  cod:false, label:'1 día hábil'},
-  'Valledupar':      {cost:10900, cod:false, label:'1–2 días hábiles'},
-  'Montería':        {cost:12900, cod:false, label:'1–2 días hábiles'},
-  'Sincelejo':       {cost:11900, cod:false, label:'1–2 días hábiles'},
-  'Cúcuta':          {cost:16900, cod:false, label:'2–3 días hábiles'},
-  'Pereira':         {cost:15900, cod:false, label:'2–3 días hábiles'},
-  'Manizales':       {cost:15900, cod:false, label:'2–3 días hábiles'},
-  'Armenia':         {cost:16900, cod:false, label:'2–3 días hábiles'},
-  'Ibagué':          {cost:16900, cod:false, label:'2–3 días hábiles'},
-  'Villavicencio':   {cost:17900, cod:false, label:'2–3 días hábiles'},
-  'Neiva':           {cost:17900, cod:false, label:'2–3 días hábiles'},
-  'Pasto':           {cost:19900, cod:false, label:'3–4 días hábiles'},
-  'Popayán':         {cost:17900, cod:false, label:'2–3 días hábiles'},
-  'Tunja':           {cost:16900, cod:false, label:'2–3 días hábiles'},
-  'Florencia':       {cost:19900, cod:false, label:'3–5 días hábiles'},
-  'Riohacha':        {cost:10900, cod:false, label:'1–2 días hábiles'},
-  'Yopal':           {cost:18900, cod:false, label:'3–4 días hábiles'},
-  'San Andrés':      {cost:24900, cod:false, label:'3–5 días hábiles'},
-  'Otra ciudad':     {cost:18900, cod:false, label:'2–5 días hábiles'},
-  // Nota: tarifas base hasta 1kg — productos >1kg tienen sobrecosto aprox +$5.000–$12.000
+  'Barranquilla':    {cost:0,     cod:true,  label:'Entrega en 24 horas'},
+  'Soledad':         {cost:0,     cod:true,  label:'Entrega en 24 horas'},
+  'Malambo':         {cost:10000, cod:false, label:'Entrega en 48 horas'},
+  'Galapa':          {cost:10000, cod:false, label:'Entrega en 48 horas'},
+  'Puerto Colombia': {cost:0,     cod:true,  label:'Entrega en 24 horas'},
+  'Cartagena':       {cost:9900,  cod:false, label:'Entrega en 2 días hábiles'},
+  'Santa Marta':     {cost:9900,  cod:false, label:'Entrega en 2 días hábiles'},
+  'Valledupar':      {cost:10900, cod:false, label:'Entrega en 2–3 días hábiles'},
+  'Riohacha':        {cost:10900, cod:false, label:'Entrega en 2–3 días hábiles'},
+  'Montería':        {cost:12900, cod:false, label:'Entrega en 2–3 días hábiles'},
+  'Sincelejo':       {cost:11900, cod:false, label:'Entrega en 2–3 días hábiles'},
+  'Mompox':          {cost:18000, cod:false, label:'Entrega en 5–6 días hábiles'},
+  'Lorica':          {cost:16000, cod:false, label:'Entrega en 4–5 días hábiles'},
+  'Bogotá':          {cost:14900, cod:false, label:'Entrega en 2–3 días hábiles'},
+  'Medellín':        {cost:13900, cod:false, label:'Entrega en 2–3 días hábiles'},
+  'Cali':            {cost:15900, cod:false, label:'Entrega en 3–4 días hábiles'},
+  'Bucaramanga':     {cost:13900, cod:false, label:'Entrega en 2–3 días hábiles'},
+  'Cúcuta':          {cost:16900, cod:false, label:'Entrega en 3–4 días hábiles'},
+  'Pereira':         {cost:15900, cod:false, label:'Entrega en 3–4 días hábiles'},
+  'Manizales':       {cost:15900, cod:false, label:'Entrega en 3–4 días hábiles'},
+  'Armenia':         {cost:16900, cod:false, label:'Entrega en 3–4 días hábiles'},
+  'Ibagué':          {cost:16900, cod:false, label:'Entrega en 3–4 días hábiles'},
+  'Villavicencio':   {cost:17900, cod:false, label:'Entrega en 3–4 días hábiles'},
+  'Neiva':           {cost:17900, cod:false, label:'Entrega en 3–4 días hábiles'},
+  'Pasto':           {cost:19900, cod:false, label:'Entrega en 4–5 días hábiles'},
+  'Popayán':         {cost:17900, cod:false, label:'Entrega en 3–4 días hábiles'},
+  'Tunja':           {cost:16900, cod:false, label:'Entrega en 3–4 días hábiles'},
+  'Florencia':       {cost:19900, cod:false, label:'Entrega en 4–6 días hábiles'},
+  'Yopal':           {cost:18900, cod:false, label:'Entrega en 4–5 días hábiles'},
+  'San Andrés':      {cost:24900, cod:false, label:'Entrega en 4–6 días hábiles'},
+  'Otra ciudad':     {cost:18900, cod:false, label:'Entrega en 3–6 días hábiles'},
 };
 
 // ═══════════════════════════════════
@@ -1557,8 +1515,13 @@ function listenProducts(){
         if(d.id==='banners') applySiteBanners(data);
         if(d.id==='colors') applySiteColors(data);
         if(d.id==='store') applySiteStore(data);
+        if(d.id==='shipping') applyShippingConfig(data);
       });
     }, err => {});
+    onSnapshot(collection(window._db,'categories'), snap=>{
+      window._allCatsFromFirebase = snap.docs.map(d=>({id:d.id,...d.data()}));
+      if(window._allCatsFromFirebase.length) renderCatCounts();
+    }, err=>{});
   } catch(e){ console.warn('Error:', e.message); onProductsLoaded(); }
 }
 
@@ -1639,6 +1602,16 @@ function applySiteColors(data){
 
 function applySiteStore(data){
   try {
+    // Apply shipping config if present
+    if(data.cities && Array.isArray(data.cities)){
+      data.cities.forEach(s=>{
+        if(s.city&&SHIPPING[s.city]!==undefined){
+          SHIPPING[s.city]={cost:s.cost||0,cod:!!s.cod,label:s.label||''};
+        } else if(s.city) {
+          SHIPPING[s.city]={cost:s.cost||0,cod:!!s.cod,label:s.label||''};
+        }
+      });
+    }
     // WhatsApp
     if(data.waLink){
       const waNum = data.waLink.replace(/[^0-9]/g,'');
@@ -1669,6 +1642,7 @@ function applySiteStore(data){
 }
 
 function onProductsLoaded(){
+  updateFooterCategories();
   filteredProds=[...allProds];
   renderHomeGrids();
   renderCatCounts();
@@ -1676,9 +1650,22 @@ function onProductsLoaded(){
   updateHeroCount();
 }
 
+function updateFooterCategories(){
+  const ftLinks = document.getElementById('ftCatLinks');
+  if(!ftLinks) return;
+  // Get unique categories from products
+  const cats = [...new Set(allProds.map(p=>p.cat))].filter(Boolean).sort();
+  if(!cats.length) return;
+  ftLinks.innerHTML = cats.map(c=>`<a onclick="goCat('${c}')" style="cursor:pointer">${c}</a>`).join('') +
+    `<a onclick="goCat('Ofertas')" style="cursor:pointer">Ofertas</a>`;
+}
+
 function updateHeroCount(){
   document.getElementById('hsProd').textContent=allProds.length+'+';
 }
+
+const catBgs=['linear-gradient(135deg,#3d0a14,#6B1A2A)','linear-gradient(135deg,#1a1230,#3a1a5a)','linear-gradient(135deg,#0d1f35,#1a3a5a)','linear-gradient(135deg,#1a0d00,#4a2500)','linear-gradient(135deg,#0d2a20,#1a5a40)','linear-gradient(135deg,#25102a,#5a204a)','linear-gradient(135deg,#1a2a3a,#2a4a6a)','linear-gradient(135deg,#2a1a0a,#5a3a1a)'];
+const catIcons={'Juguetes':'fa-heart','Lencería':'fa-star','Lubricantes':'fa-tint','Bondage':'fa-link','Accesorios':'fa-gem','Parejas':'fa-users','Wellness':'fa-spa','Estimulantes':'fa-bolt','Disfraces':'fa-mask'};
 
 function renderCatCounts(){
   const cats=['Juguetes','Lencería','Lubricantes','Bondage'];
@@ -1692,11 +1679,48 @@ function renderCatCounts(){
   const cats2=[...new Set(allProds.map(p=>p.cat))].sort();
   const fl=document.getElementById('catFilterList');
   if(fl) fl.innerHTML=cats2.map(c=>`<div class="fopt"><input type="checkbox" checked/><label>${c}</label><span class="fc">${allProds.filter(p=>p.cat===c).length}</span></div>`).join('');
+  // Dynamic home cat grid — 4 columns, wraps
+  const grid=document.getElementById('homeCatGrid');
+  if(grid && window._allCatsFromFirebase && window._allCatsFromFirebase.length){
+    grid.innerHTML=window._allCatsFromFirebase.map((c,i)=>{
+      const n=allProds.filter(p=>p.cat===c.name).length;
+      const ico=catIcons[c.name]||'fa-tag';
+      const bg=catBgs[i%catBgs.length];
+      const imgStyle=c.img?`background:${bg};`:`background:${bg};`;
+      return `<div class="cc" onclick="goCat('${c.name}')">
+        <div class="cc-img" style="${imgStyle}">
+          ${c.img?`<img src="${c.img}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:0" onerror="this.style.display='none'">`:''}
+          <i class="fas ${ico} cc-ico" style="${c.img?'display:none':''}"></i>
+        </div>
+        <div class="cc-ov">
+          <div class="cc-name">${c.emoji||''} ${c.name}</div>
+          <div class="cc-cnt">${n} producto${n!==1?'s':''}</div>
+          <button class="cc-btn">Ver más <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>`;
+    }).join('');
+  }
 }
 
 // ═══════════════════════════════════
 // CARD HTML
 // ═══════════════════════════════════
+
+function applyShippingConfig(data){
+  try {
+    if(data.cities && Array.isArray(data.cities)){
+      data.cities.forEach(s=>{
+        if(!s.city) return;
+        SHIPPING[s.city] = {
+          cost: parseInt(s.cost)||0,
+          cod: !!s.cod,
+          label: s.label||''
+        };
+      });
+    }
+  } catch(e){ console.warn('Shipping config error:', e); }
+}
+
 const grads=['linear-gradient(135deg,#3d0a14,#6B1A2A)','linear-gradient(135deg,#1a1230,#3a1a5a)','linear-gradient(135deg,#0d1f35,#1a3a5a)','linear-gradient(135deg,#1a0d00,#4a2500)','linear-gradient(135deg,#0d2a20,#1a5a40)','linear-gradient(135deg,#25102a,#5a204a)'];
 
 function cardHTML(p,i){
@@ -1879,6 +1903,13 @@ function goCheckout(){
   if(!cart.length){toast('Agrega productos al carrito primero');return;}
   toggleCart(); currentStep=1;
   coShowStep(1); go('checkout');
+  // Auto-select COD payment by default
+  setTimeout(()=>{
+    const codEl=document.getElementById('pf-cod');
+    if(codEl) codEl.classList.add('show');
+    const codOpt=document.getElementById('codOpt');
+    if(codOpt) codOpt.classList.add('sel');
+  },100);
 }
 
 // ═══════════════════════════════════
@@ -1906,8 +1937,9 @@ function updateShipping(){
   const finalShipCost = calcShipCostByWeight(city, totalWeight);
   shipCost = finalShipCost;
   info.className='ship-info show';
+  const shipCostDisplay = finalShipCost === 0 ? '<strong style="color:var(--ok)">GRATIS</strong>' : `<strong style="color:var(--vino)">$${finalShipCost.toLocaleString('es-CO')}</strong>`;
   const weightNote = totalWeight > 1 ? ` · ${totalWeight.toFixed(1)}kg` : '';
-  info.innerHTML=`<strong>${city}</strong> — Envío: <strong style="color:var(--vino)">$${finalShipCost.toLocaleString('es-CO')}</strong>${weightNote} · ${s.label} · Interrapidísimo`;
+  info.innerHTML=`<strong>${city}</strong> — Envío: ${shipCostDisplay}${weightNote} · ${s.label}`;
   codNote.className='cod-note'+(s.cod?' show':'');
   codOpt.className='pay-opt'+(s.cod?'':' disabled');
   if(!s.cod && document.getElementById('pf-cod').classList.contains('show')){
@@ -1967,7 +1999,7 @@ function updateCoSummary(){
 async function confirmOrder(){
   const name=document.getElementById('coName').value;
   const city=document.getElementById('coCity').value;
-  if(!name||!city){toast('Completa la información de envío primero');coShowStep(1);return;}
+  if(!name||!city){toast('Completa la información de envío: nombre y ciudad requeridos');coShowStep(1);return;}
   orderCount++;
   const num='NS-'+String(Date.now()).slice(-6);
   document.getElementById('orderNum').textContent='#'+num;
@@ -2002,7 +2034,49 @@ async function confirmOrder(){
       await addDoc(collection(window._db,'orders'),{...orderData,ts:serverTimestamp()});
     } catch(e){ console.warn('Order save error:',e); }
   }
+  // Notify via WhatsApp
+  notifyWhatsApp(orderData, num);
   cart=[]; updateCartUI(); coShowStep(3);
+}
+
+// ═══════════════════════════════════════════════════════
+// CALLMEBOT — notificación silenciosa a tu WhatsApp
+// Pasos para activar (solo una vez):
+//  1. Agrega +34 644 41 64 98 a tus contactos (CallMeBot)
+//  2. Envíale este mensaje por WhatsApp: "I allow callmebot to send me messages"
+//  3. Recibirás tu apikey. Reemplaza TU_API_KEY abajo.
+// ═══════════════════════════════════════════════════════
+const CALLMEBOT_PHONE  = '573244518229';   // tu número SIN + ni espacios
+const CALLMEBOT_APIKEY = '7131094';     // ← reemplaza con tu clave
+
+async function notifyWhatsApp(order, num){
+  try {
+    const items = (order.items||[])
+      .map(i=>`• ${i.qty}x ${i.name}${i.size?' ('+i.size+')':''} $${((i.price||0)*i.qty).toLocaleString('es-CO')}`)
+      .join('%0A');
+
+    const msg = encodeURIComponent(
+      `🛍 NUEVO PEDIDO #${num}\n\n` +
+      `👤 Cliente: ${order.customer?.name||'—'}\n` +
+      `📱 WA: ${order.customer?.phone||'—'}\n` +
+      `📧 Email: ${order.customer?.email||'—'}\n\n` +
+      `📦 Productos:\n${(order.items||[]).map(i=>`  • ${i.qty}x ${i.name}${i.size?' ('+i.size+')':''} → $${((i.price||0)*i.qty).toLocaleString('es-CO')}`).join('\n')}\n\n` +
+      `💵 Subtotal: $${(order.subtotal||0).toLocaleString('es-CO')}\n` +
+      `🚚 Envío: $${(order.shippingCost||0).toLocaleString('es-CO')}\n` +
+      `💰 TOTAL: $${(order.total||0).toLocaleString('es-CO')}\n\n` +
+      `📍 Ciudad: ${order.shipping?.city||'—'}\n` +
+      `🏠 Dirección: ${order.shipping?.address||'—'}${order.shipping?.barrio?', '+order.shipping.barrio:''}\n` +
+      `📝 Notas: ${order.shipping?.notes||'Ninguna'}\n` +
+      `💳 Pago: ${order.payMethod||'—'}\n\n` +
+      `🕐 ${new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'})}`
+    );
+
+    // Si la apikey está configurada, envía silenciosamente
+    if(CALLMEBOT_APIKEY !== 'TU_API_KEY'){
+      const url = `https://api.callmebot.com/whatsapp.php?phone=${CALLMEBOT_PHONE}&text=${msg}&apikey=${CALLMEBOT_APIKEY}`;
+      fetch(url).catch(()=>{}); // silencioso, no bloquea nada
+    }
+  } catch(e){ console.warn('WA notify error', e); }
 }
 
 function updateNequiInfo(){
@@ -2029,7 +2103,7 @@ function updateNequiInfo(){
 }
 
 function selPay(type,el){
-  if(el.classList.contains('disabled'))return;
+  if(el && el.classList && el.classList.contains('disabled'))return;
   document.querySelectorAll('.pay-opt').forEach(p=>p.classList.remove('sel'));
   el.classList.add('sel');
   document.querySelectorAll('.pay-frm').forEach(f=>f.classList.remove('show'));
@@ -2141,6 +2215,16 @@ function loadProfile(){
   renderWishlistTab();
 }
 
+async function loadUserAddresses(uid){
+  if(!window._db||!uid)return;
+  try {
+    const {doc,getDoc}=window._fb;
+    const snap = await getDoc(doc(window._db,'users',uid));
+    const addrs = snap.exists()?(snap.data().addresses||[]):[];
+    renderAddresses(addrs);
+  } catch(e){ console.warn(e); }
+}
+
 async function loadUserOrders(uid){
   if(!window._db){
     document.getElementById('ordersList').innerHTML=`<p style="color:var(--gray);font-size:14px">Conecta Firebase para ver tus pedidos.</p>`;
@@ -2170,6 +2254,10 @@ async function loadUserOrders(uid){
             <span style="font-size:14.5px;font-weight:600;color:var(--vino)">$${(o.total||0).toLocaleString('es-CO')}</span>
             <span style="font-size:12px;color:var(--gray)">📍 ${o.shipping?.city||'—'} · ${o.payMethod||'—'}</span>
           </div>
+          <div style="display:flex;gap:16px;margin-top:6px;padding-top:6px;border-top:1px solid var(--lgray);font-size:12px;color:var(--gray)">
+            <span>Subtotal: <strong>$${(o.subtotal||0).toLocaleString('es-CO')}</strong></span>
+            <span>Envío: <strong>$${(o.shippingCost||o.shipping?.cost||0).toLocaleString('es-CO')}</strong></span>
+          </div>
         </div>
       </div>`).join('');
     });
@@ -2183,6 +2271,87 @@ function renderWishlistTab(){
   const wp=allProds.filter(p=>wishlist.includes(p.id));
   if(wp.length){ wg.innerHTML=wp.map((p,i)=>cardHTML(p,i)).join(''); }
   else { wg.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--gray)"><i class="fas fa-heart" style="font-size:36px;color:var(--lgray);margin-bottom:13px;display:block"></i><p style="font-size:15px;font-weight:500;margin-bottom:5px">Tu lista de deseos está vacía</p><p style="font-size:13px">Haz clic en ♡ en cualquier producto</p></div>`; }
+}
+
+async function doLogout(){
+  if(!window._auth)return;
+  try {
+    await window._fb.signOut(window._auth);
+    fbUser=null;
+    updateUserIcon();
+    go('home');
+    toast('Sesión cerrada ✓');
+  } catch(e){ toast('Error al cerrar sesión'); }
+}
+
+// ─── AGREGAR DIRECCIÓN ───
+let editingAddrIdx = -1;
+function openAddAddr(){
+  document.getElementById('addrModal').classList.add('open');
+  document.getElementById('addrForm').reset();
+  editingAddrIdx = -1;
+}
+function closeAddrModal(){ document.getElementById('addrModal').classList.remove('open'); }
+async function saveAddress(){
+  const n = document.getElementById('addrNombreLabel').value.trim();
+  const a = document.getElementById('addrCalle').value.trim();
+  const c = document.getElementById('addrCiudad').value.trim();
+  const b = document.getElementById('addrBarrioI').value.trim();
+  if(!n||!a||!c){toast('Completa los campos requeridos');return;}
+  if(!fbUser||!window._db)return;
+  try {
+    const {doc,getDoc,setDoc}=window._fb;
+    const ref = doc(window._db,'users',fbUser.uid);
+    const snap = await getDoc(ref);
+    let addrs = snap.exists() ? (snap.data().addresses||[]) : [];
+    const newAddr = {label:n,address:a,city:c,barrio:b,ts:Date.now()};
+    if(editingAddrIdx>=0) addrs[editingAddrIdx]=newAddr;
+    else addrs.push(newAddr);
+    await setDoc(ref,{addresses:addrs},{merge:true});
+    toast('Dirección guardada ✓');
+    closeAddrModal();
+    renderAddresses(addrs);
+  } catch(e){ toast('Error al guardar dirección'); }
+}
+function renderAddresses(addrs){
+  const grid = document.getElementById('addrList');
+  if(!addrs||!addrs.length){
+    grid.innerHTML='<div class="addr-card"><div class="addr-txt">No tienes direcciones guardadas.</div></div>';
+    return;
+  }
+  grid.innerHTML = addrs.map((a,i)=>`<div class="addr-card${i===0?' def':''}">
+    ${i===0?'<span class="addr-def-lbl">Principal</span>':''}
+    <div class="addr-name">${a.label}</div>
+    <div class="addr-txt">${a.address}${a.barrio?', '+a.barrio:''}<br/>${a.city}</div>
+    <div class="addr-acts">
+      <button class="addr-btn" onclick="editAddr(${i})"><i class="fas fa-edit"></i> Editar</button>
+      <button class="addr-btn" onclick="deleteAddr(${i})" style="color:var(--err)"><i class="fas fa-trash"></i></button>
+    </div>
+  </div>`).join('');
+}
+async function editAddr(i){
+  if(!fbUser||!window._db)return;
+  const {doc,getDoc}=window._fb;
+  const snap = await getDoc(doc(window._db,'users',fbUser.uid));
+  const addrs = snap.exists()?(snap.data().addresses||[]):[];
+  const a = addrs[i]; if(!a)return;
+  editingAddrIdx=i;
+  document.getElementById('addrNombreLabel').value=a.label||'';
+  document.getElementById('addrCalle').value=a.address||'';
+  document.getElementById('addrCiudad').value=a.city||'';
+  document.getElementById('addrBarrioI').value=a.barrio||'';
+  document.getElementById('addrModal').classList.add('open');
+}
+async function deleteAddr(i){
+  if(!fbUser||!window._db)return;
+  if(!confirm('¿Eliminar esta dirección?'))return;
+  const {doc,getDoc,setDoc}=window._fb;
+  const snap = await getDoc(doc(window._db,'users',fbUser.uid));
+  let addrs = snap.exists()?(snap.data().addresses||[]):[];
+  addrs.splice(i,1);
+  await setDoc(doc(window._db,'users',fbUser.uid),{addresses:addrs},{merge:true});
+  toast('Dirección eliminada');
+  renderAddresses(addrs);
 }
 
 async function saveProfile(){
@@ -2206,6 +2375,7 @@ function showPTab(id,el){
   if(el) el.classList.add('act');
   if(id==='wishlist') renderWishlistTab();
   if(id==='orders'&&fbUser) loadUserOrders(fbUser.uid);
+  if(id==='addresses'&&fbUser) loadUserAddresses(fbUser.uid);
 }
 
 // ═══════════════════════════════════
@@ -2328,5 +2498,25 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape') closeMobMenu();
 });
 </script>
+
+<!-- ── MODAL DIRECCIÓN ── -->
+<div class="modal-ov" id="addrModal" onclick="if(event.target===this)closeAddrModal()">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-logo">Agregar <em>Dirección</em></div>
+      <div class="modal-sub">Guarda tu dirección de entrega</div>
+      <button class="modal-x" onclick="closeAddrModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" style="padding:26px 34px 30px">
+      <form id="addrForm" onsubmit="event.preventDefault()">
+        <div class="fg"><label class="flbl">Etiqueta (Casa, Trabajo…)</label><input class="fin" id="addrNombreLabel" placeholder="Ej: Mi casa"/></div>
+        <div class="fg"><label class="flbl">Dirección completa *</label><input class="fin" id="addrCalle" placeholder="Calle / Carrera, número…"/></div>
+        <div class="fg"><label class="flbl">Barrio</label><input class="fin" id="addrBarrioI" placeholder="Nombre del barrio"/></div>
+        <div class="fg"><label class="flbl">Ciudad *</label><input class="fin" id="addrCiudad" placeholder="Barranquilla"/></div>
+        <button class="btn-full" type="button" onclick="saveAddress()"><i class="fas fa-save" style="margin-right:7px"></i>Guardar Dirección</button>
+      </form>
+    </div>
+  </div>
+</div>
 </body>
 </html>
