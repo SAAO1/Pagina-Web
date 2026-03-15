@@ -13,8 +13,7 @@
   import { getFirestore, collection, onSnapshot, doc, updateDoc, addDoc,
            deleteDoc, query, orderBy, serverTimestamp, setDoc, getDoc }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  import { getStorage, ref, uploadBytes, getDownloadURL }
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+  // Firebase Storage removed — using imgbb.com (free) instead
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
@@ -29,17 +28,16 @@
 
   const app     = initializeApp(firebaseConfig);
   const db      = getFirestore(app);
-  const storage = getStorage(app);
+  // storage removed
   const auth    = getAuth(app);
 
   window._db      = db;
-  window._storage = storage;
+  // _storage removed
   window._auth2   = auth;
   window._signIn  = (email, pass) => signInWithEmailAndPassword(auth, email, pass);
   window._signOut = () => signOut(auth);
   window._fb2 = { collection, onSnapshot, doc, updateDoc, addDoc, deleteDoc,
-                  query, orderBy, serverTimestamp, setDoc, getDoc, ref,
-                  uploadBytes, getDownloadURL };
+                  query, orderBy, serverTimestamp, setDoc, getDoc };
 
   // Observar estado de auth
   onAuthStateChanged(auth, user => {
@@ -48,12 +46,17 @@
       document.getElementById('adminWrap').classList.add('show');
       const el = document.getElementById('adminUserEmail');
       if(el) el.textContent = user.email;
+      // Marcar Firebase como listo
+      window._firebaseReady2 = true;
+      // Iniciar datos SIEMPRE (sesión nueva o sesión existente)
       if(!window._adminInited){
         window._adminInited = true;
-        window._firebaseReady2 = true;
         setTimeout(() => document.dispatchEvent(new Event('fb2Ready')), 0);
+        // Llamar initAdmin directamente también
+        if(typeof initAdmin === 'function') initAdmin();
       }
     } else {
+      window._adminInited = false;
       document.getElementById('adminWrap').classList.remove('show');
       document.getElementById('loginWrap').style.display = 'flex';
       const sp = document.getElementById('loginSpinner');
@@ -754,27 +757,13 @@ textarea.fi{resize:vertical;min-height:80px}
         </div>
       </div>
 
-      <!-- IMG UPLOAD -->
+      <!-- IMÁGENES — hasta 4 fotos -->
       <div class="fg">
-        <label>Imagen del producto</label>
-        <div class="img-drop" id="imgDrop">
-          <input type="file" id="imgFile" accept="image/*" onchange="handleImgSelect(this)"/>
-          <i class="fas fa-cloud-upload-alt" style="font-size:28px;color:var(--gold);margin-bottom:8px;display:block"></i>
-          <p style="font-size:13px;font-weight:500;margin-bottom:4px">Arrastra una foto aquí o haz clic</p>
-          <p style="font-size:11.5px;color:var(--gray)">JPG, PNG, WEBP · Máx 5MB · Recomendado 800×800px</p>
+        <label>Imágenes del producto <span style="font-size:11px;color:var(--gray);font-weight:400">(hasta 4 fotos — la 1ª es la principal)</span></label>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px" id="imgSlots">
+          <!-- Se generan dinámicamente -->
         </div>
-        <div id="imgPreviewWrap" style="display:none;margin-top:10px">
-          <div class="img-preview-wrap">
-            <img id="imgPreview" src="" alt="preview"/>
-            <button class="img-remove" onclick="removeImg()"><i class="fas fa-times"></i></button>
-          </div>
-          <div id="imgUploadStatus" style="font-size:12px;color:var(--gray);margin-top:6px"></div>
-        </div>
-        <div class="fg" style="margin-top:10px">
-          <label>O pega URL de imagen</label>
-          <input class="fi" id="pImgUrl" placeholder="https://..." oninput="previewImgUrl(this.value)"/>
-          <p class="fhint">Sube tu foto a <a href="https://imgbb.com" target="_blank" style="color:var(--vino)">imgbb.com</a> y pega el link directo aquí</p>
-        </div>
+        <div id="imgUploadStatus" style="font-size:12px;color:var(--gray);margin-top:6px"></div>
       </div>
 
       <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
@@ -802,7 +791,7 @@ textarea.fi{resize:vertical;min-height:80px}
         </div>
         <div class="fg">
           <label>Emoji / Ícono</label>
-          <input class="fi" id="catEmoji" placeholder="Ej: 💎" maxlength="4"/>
+          <input class="fi" id="catEmoji" placeholder="Opcional — solo se ve si no hay imagen" maxlength="4"/>
         </div>
       </div>
 
@@ -857,6 +846,33 @@ const ADMIN_EMAIL = 'natural.sex001@gmail.com';
 // STATE
 // ══════════════════════════════════
 let allOrders=[], allProds=[], allUsers=[], allNL=[], allCats=[];
+
+// ══════════════════════════════════
+// IMGBB — subida de imágenes GRATIS
+// Pasos para activar (1 minuto):
+//  1. Ve a https://imgbb.com y crea cuenta gratis
+//  2. Ve a https://api.imgbb.com y copia tu API Key
+//  3. Pégala aquí abajo:
+const IMGBB_API_KEY = '86b86294e2010ff866682b491636189a';
+
+async function uploadToImgbb(file){
+  if(!file) return null;
+  if(IMGBB_API_KEY === 'TU_IMGBB_KEY'){
+    // Sin apikey: devolver base64 como fallback temporal
+    return await new Promise(res=>{
+      const r=new FileReader();
+      r.onload=e=>res(e.target.result);
+      r.readAsDataURL(file);
+    });
+  }
+  const formData = new FormData();
+  formData.append('image', file);
+  formData.append('key', IMGBB_API_KEY);
+  const resp = await fetch('https://api.imgbb.com/1/upload', {method:'POST', body:formData});
+  const data = await resp.json();
+  if(!data.success) throw new Error(data.error?.message || 'imgbb error');
+  return data.data.url;
+}
 let editingProdId=null, selectedImgFile=null, selectedImgUrl='';
 
 // Categorías por defecto
@@ -895,8 +911,7 @@ async function doLogin(){
 
   try {
     await window._signIn(email, pass);
-    // onAuthStateChanged se encarga de mostrar el panel
-    initAdmin();
+    // onAuthStateChanged se encarga de mostrar el panel e iniciar los datos
   } catch(e){
     sp.style.display='none'; icon.style.display='inline'; btnTxt.textContent='Ingresar';
     errEl.classList.add('show');
@@ -910,9 +925,10 @@ async function doLogin(){
 
 async function adminLogout(){
   try {
-    const { signOut } = window._fb2;
     await window._signOut();
   } catch(e){ console.warn(e); }
+  window._adminInited   = false;
+  _listenersStarted     = false;
   document.getElementById('adminWrap').classList.remove('show');
   document.getElementById('loginWrap').style.display='flex';
   document.getElementById('adminPass').value='';
@@ -922,10 +938,21 @@ async function adminLogout(){
 // ══════════════════════════════════
 // INIT
 // ══════════════════════════════════
+let _listenersStarted = false;
+
 function initAdmin(){
   document.getElementById('dateNow').textContent = new Date().toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  if(window._firebaseReady2) setTimeout(startListeners, 0);
-  else document.addEventListener('fb2Ready', startListeners);
+  if(_listenersStarted) return; // evitar duplicados
+  if(window._firebaseReady2){
+    _listenersStarted = true;
+    startListeners();
+  } else {
+    document.addEventListener('fb2Ready', ()=>{
+      if(_listenersStarted) return;
+      _listenersStarted = true;
+      startListeners();
+    });
+  }
 }
 
 function startListeners(){
@@ -1183,6 +1210,9 @@ function openProdModal(){
   editingProdId=null; selectedImgFile=null; selectedImgUrl='';
   clearProdForm();
   document.getElementById('prodModalTitle').textContent='Nuevo Producto';
+  renderImgSlots();
+  const btn=document.getElementById('saveProdBtn');
+  if(btn){ btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Guardar producto'; }
   document.getElementById('prodModal').classList.add('open');
 }
 function closeProdModal(){ document.getElementById('prodModal').classList.remove('open'); }
@@ -1196,134 +1226,165 @@ function clearProdForm(){
   document.getElementById('sizesCustomWrap').style.display='none';
   document.querySelectorAll('#sizeCheckboxes input').forEach(cb=>{ cb.checked=['XS','S','M','L','XL'].includes(cb.value); });
   if(allCats.length) document.getElementById('pCat').value=allCats[0].name;
-  document.getElementById('imgPreviewWrap').style.display='none';
+  imgSlots=[{file:null,url:''},{file:null,url:''},{file:null,url:''},{file:null,url:''}];
+  renderImgSlots();
   document.getElementById('imgUploadStatus').textContent='';
   selectedImgFile=null; selectedImgUrl='';
 }
 
 function editProd(docId){
-  const p = allProds.find(x=>x.docId===docId); if(!p)return;
-  editingProdId=docId;
-  document.getElementById('pName').value=p.name||'';
-  document.getElementById('pCat').value=p.cat||allCats[0]?.name||'';
-  document.getElementById('pPrice').value=p.price||'';
-  document.getElementById('pWas').value=p.was||'';
-  document.getElementById('pStock').value=p.stock||'';
-  document.getElementById('pBadge').value=p.badge||'';
-  document.getElementById('pDesc').value=p.desc||'';
-  document.getElementById('pImgUrl').value=p.img||'';
-  document.getElementById('pWeight').value=p.weight||'0.5';
-  // Tallas
-  const hasSizes=!!(p.hasSizes||( p.sizes&&p.sizes.length));
+  const p = allProds.find(x=>x.docId===docId); if(!p) return;
+  editingProdId  = docId;
+  selectedImgFile= null;
+  selectedImgUrl = p.img||'';
+
+  document.getElementById('prodModalTitle').textContent='Editar Producto';
+  document.getElementById('pName').value   = p.name  ||'';
+  document.getElementById('pCat').value    = p.cat   || (allCats[0]?.name||'');
+  document.getElementById('pPrice').value  = p.price ||'';
+  document.getElementById('pWas').value    = p.was   ||'';
+  document.getElementById('pStock').value  = p.stock ||'';
+  document.getElementById('pBadge').value  = p.badge ||'';
+  document.getElementById('pDesc').value   = p.desc  ||'';
+  document.getElementById('pWeight').value = p.weight||'0.5';
+  const hasSizes=!!(p.hasSizes||(p.sizes&&p.sizes.length));
   document.getElementById('pHasSizes').checked=hasSizes;
   document.getElementById('sizesCustomWrap').style.display=hasSizes?'block':'none';
-  if(p.sizes&&p.sizes.length){
-    document.querySelectorAll('#sizeCheckboxes input').forEach(cb=>{ cb.checked=p.sizes.includes(cb.value); });
-  } else {
-    document.querySelectorAll('#sizeCheckboxes input').forEach(cb=>{ cb.checked=['XS','S','M','L','XL'].includes(cb.value); });
-  }
-  if(p.img){
-    document.getElementById('imgPreview').src=p.img;
-    document.getElementById('imgPreviewWrap').style.display='block';
-  } else {
-    document.getElementById('imgPreviewWrap').style.display='none';
-  }
-  selectedImgUrl=p.img||'';
-  selectedImgFile=null;
-  document.getElementById('prodModalTitle').textContent='Editar Producto';
+  document.querySelectorAll('#sizeCheckboxes input').forEach(cb=>{
+    cb.checked = p.sizes?.length ? p.sizes.includes(cb.value) : ['XS','S','M','L','XL'].includes(cb.value);
+  });
+
+  // Cargar imágenes existentes en los slots
+  imgSlots=[
+    {file:null, url:p.img  ||''},
+    {file:null, url:p.img2 ||''},
+    {file:null, url:p.img3 ||''},
+    {file:null, url:p.img4 ||''},
+  ];
+  renderImgSlots();
+  document.getElementById('imgUploadStatus').textContent='';
+
+  // Rehabilitar botón por si quedó desactivado en sesión anterior
+  const btn=document.getElementById('saveProdBtn');
+  if(btn){ btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Guardar producto'; }
+
   document.getElementById('prodModal').classList.add('open');
 }
 
-// IMG handling
-function handleImgSelect(input){
-  const file = input.files[0]; if(!file)return;
-  if(file.size > 5*1024*1024){ aToast('⚠️ La imagen no puede superar 5MB'); return; }
-  selectedImgFile = file;
+// ── MULTI-IMAGE SYSTEM (hasta 4 fotos por producto) ──
+const MAX_IMGS = 4;
+// imgSlots[i] = { file: File|null, url: string }
+let imgSlots = [{file:null,url:''},{file:null,url:''},{file:null,url:''},{file:null,url:''}];
+
+function renderImgSlots(){
+  const container = document.getElementById('imgSlots');
+  if(!container) return;
+  container.innerHTML = imgSlots.map((slot,i)=>{
+    const label = i===0 ? 'Principal' : `Foto ${i+1}`;
+    if(slot.url){
+      return `<div style="position:relative;border-radius:8px;overflow:hidden;border:2px solid ${i===0?'var(--vino)':'var(--border)'}">
+        <img src="${slot.url}" style="width:100%;height:110px;object-fit:cover;display:block"/>
+        <div style="position:absolute;top:0;left:0;right:0;background:rgba(0,0,0,.45);color:#fff;font-size:10px;font-weight:600;padding:3px 6px;letter-spacing:.5px">${label}</div>
+        <button onclick="removeSlotImg(${i})" style="position:absolute;top:4px;right:4px;background:var(--err);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center"><i class="fas fa-times"></i></button>
+      </div>`;
+    } else {
+      return `<label style="border:2px dashed var(--border);border-radius:8px;height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:5px;transition:border-color .2s;background:var(--off)" onmouseover="this.style.borderColor='var(--vino)'" onmouseout="this.style.borderColor='var(--border)'">
+        <input type="file" accept="image/*" style="display:none" onchange="handleSlotImgSelect(${i},this)"/>
+        <i class="fas fa-plus" style="font-size:20px;color:var(--gold)"></i>
+        <span style="font-size:10px;color:var(--gray);font-weight:600">${label}</span>
+      </label>`;
+    }
+  }).join('');
+}
+
+function handleSlotImgSelect(idx, input){
+  const file = input.files[0]; if(!file) return;
+  if(file.size > 5*1024*1024){ aToast('⚠️ Máximo 5MB por imagen'); return; }
+  imgSlots[idx].file = file;
   const reader = new FileReader();
-  reader.onload = e=>{
-    document.getElementById('imgPreview').src=e.target.result;
-    document.getElementById('imgPreviewWrap').style.display='block';
-    document.getElementById('imgUploadStatus').textContent='📷 Imagen lista para subir';
-  };
+  reader.onload = e=>{ imgSlots[idx].url = e.target.result; renderImgSlots(); };
   reader.readAsDataURL(file);
 }
-function previewImgUrl(url){
-  if(url){
-    document.getElementById('imgPreview').src=url;
-    document.getElementById('imgPreviewWrap').style.display='block';
-    selectedImgUrl=url; selectedImgFile=null;
-  }
+
+function removeSlotImg(idx){
+  imgSlots[idx] = {file:null, url:''};
+  renderImgSlots();
 }
-function removeImg(){
-  document.getElementById('imgPreviewWrap').style.display='none';
-  document.getElementById('imgFile').value='';
-  document.getElementById('pImgUrl').value='';
-  selectedImgFile=null; selectedImgUrl='';
-}
+
+// Mantener compatibilidad con funciones antiguas referenciadas
+function handleImgSelect(input){ handleSlotImgSelect(0,input); }
+function removeImg(){ removeSlotImg(0); }
 
 async function saveProduct(){
-  const name=document.getElementById('pName').value.trim();
-  const price=parseInt(document.getElementById('pPrice').value)||0;
+  const name  = document.getElementById('pName').value.trim();
+  const price = parseInt(document.getElementById('pPrice').value)||0;
   if(!name||!price){ aToast('⚠️ Nombre y precio son obligatorios'); return; }
 
-  const btn=document.getElementById('saveProdBtn');
-  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  const btn = document.getElementById('saveProdBtn');
+  btn.disabled=true;
+  btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Guardando...';
+  const statusEl = document.getElementById('imgUploadStatus');
 
-  let imgUrl = selectedImgUrl || document.getElementById('pImgUrl').value.trim();
-
-  // Si hay archivo seleccionado, subirlo a Firebase Storage
-  if(selectedImgFile && window._storage){
-    try {
-      document.getElementById('imgUploadStatus').textContent='⬆️ Subiendo imagen...';
-      const {ref,uploadBytes,getDownloadURL}=window._fb2;
-      const storageRef=ref(window._storage,`products/${Date.now()}_${selectedImgFile.name}`);
-      const snapshot=await uploadBytes(storageRef,selectedImgFile);
-      imgUrl=await getDownloadURL(snapshot.ref);
-      document.getElementById('imgUploadStatus').textContent='✅ Imagen subida';
-    } catch(e){
-      aToast('Error subiendo imagen: '+e.message);
-      imgUrl='';
-    }
-  }
-
-  // Recopilar tallas seleccionadas
-  const hasSizes = document.getElementById('pHasSizes').checked;
-  const selectedSizes = hasSizes
-    ? Array.from(document.querySelectorAll('#sizeCheckboxes input:checked')).map(cb=>cb.value)
-    : [];
-  const data={
-    name,
-    cat:document.getElementById('pCat').value,
-    price,
-    was:parseInt(document.getElementById('pWas').value)||null,
-    stock:parseInt(document.getElementById('pStock').value)||0,
-    badge:document.getElementById('pBadge').value||null,
-    desc:document.getElementById('pDesc').value.trim(),
-    img:imgUrl||null,
-    hasSizes,
-    sizes: selectedSizes,
-    weight: parseFloat(document.getElementById('pWeight').value)||0.5,
-  };
-
-  if(window._db){
-    try{
-      const {collection,addDoc,doc,updateDoc,serverTimestamp}=window._fb2;
-      if(editingProdId){
-        await updateDoc(doc(window._db,'products',editingProdId),data);
-        aToast('✓ Producto actualizado — visible en tu tienda');
-      } else {
-        await addDoc(collection(window._db,'products'),{...data,createdAt:serverTimestamp()});
-        aToast('✓ Producto agregado — ya aparece en tu tienda');
+  try {
+    // ── Subir imágenes ──
+    const imgUrls = ['','','',''];
+    for(let i=0; i<MAX_IMGS; i++){
+      const slot = imgSlots[i];
+      if(slot.file){
+        try {
+          if(statusEl) statusEl.textContent=`⬆️ Subiendo imagen ${i+1}...`;
+          imgUrls[i] = await uploadToImgbb(slot.file);
+        } catch(e){
+          console.warn('Image upload error:', e.message);
+          // Si falla la imagen, usar URL existente si la hay
+          if(slot.url && !slot.url.startsWith('data:')) imgUrls[i]=slot.url;
+          if(statusEl) statusEl.textContent=`⚠️ Imagen ${i+1} no subió (${e.message}) — guardando sin ella`;
+        }
+      } else if(slot.url && !slot.url.startsWith('data:')){
+        imgUrls[i]=slot.url;
       }
-    } catch(e){ aToast('Error: '+e.message); }
-  } else {
-    if(editingProdId){ const i=allProds.findIndex(x=>x.docId===editingProdId); if(i>=0)allProds[i]={...allProds[i],...data}; }
-    else allProds.push({docId:'p_'+Date.now(),...data});
-    renderProds(allProds);
-    aToast('✓ Guardado (sin Firebase conectado)');
+    }
+    if(statusEl) statusEl.textContent = imgUrls.some(Boolean)?'✅ Listo':'';
+
+    // ── Construir objeto de datos ──
+    const hasSizes = document.getElementById('pHasSizes').checked;
+    const data={
+      name,
+      cat:    document.getElementById('pCat').value,
+      price,
+      was:    parseInt(document.getElementById('pWas').value)||null,
+      stock:  parseInt(document.getElementById('pStock').value)||0,
+      badge:  document.getElementById('pBadge').value||null,
+      desc:   document.getElementById('pDesc').value.trim(),
+      img:    imgUrls[0]||null,
+      img2:   imgUrls[1]||null,
+      img3:   imgUrls[2]||null,
+      img4:   imgUrls[3]||null,
+      hasSizes,
+      sizes:  hasSizes ? Array.from(document.querySelectorAll('#sizeCheckboxes input:checked')).map(cb=>cb.value) : [],
+      weight: parseFloat(document.getElementById('pWeight').value)||0.5,
+    };
+
+    // ── Guardar en Firebase ──
+    if(!window._db || !window._fb2){ aToast('❌ Sin conexión a Firebase'); return; }
+    const {collection,addDoc,doc,updateDoc,serverTimestamp}=window._fb2;
+    if(editingProdId){
+      await updateDoc(doc(window._db,'products',editingProdId),data);
+      aToast('✅ Producto actualizado');
+    } else {
+      await addDoc(collection(window._db,'products'),{...data,createdAt:serverTimestamp()});
+      aToast('✅ Producto creado — ya aparece en tu tienda');
+    }
+    closeProdModal();
+
+  } catch(err){
+    console.error('saveProduct error:', err);
+    aToast('❌ Error al guardar: ' + err.message);
+  } finally {
+    // SIEMPRE rehabilitar el botón pase lo que pase
+    btn.disabled=false;
+    btn.innerHTML='<i class="fas fa-save"></i> Guardar producto';
   }
-  btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> Guardar producto';
-  closeProdModal();
 }
 
 async function deleteProd(docId){
@@ -1424,13 +1485,47 @@ function initShippingTab(){
 
 // ══════════════════════════════════
 function renderCats(){
-  const el=document.getElementById('catChips');
-  el.innerHTML=allCats.map(c=>`
-    <div class="cat-chip">
-      ${c.emoji||'📦'} ${c.name}
-      <button onclick="deleteCat('${c.docId}')" title="Eliminar"><i class="fas fa-times"></i></button>
-    </div>
-  `).join('');
+  // ── chips ocultos (para compatibilidad) ──
+  const elChips = document.getElementById('catChips');
+  if(elChips) elChips.innerHTML = allCats.map(c=>`
+    <div class="cat-chip">${c.emoji||'📦'} ${c.name}
+      <button onclick="deleteCat('${c.docId}')"><i class="fas fa-times"></i></button>
+    </div>`).join('');
+
+  // ── grid de cards visible ──
+  const grid = document.getElementById('catGrid');
+  if(!grid) return;
+
+  if(!allCats.length){
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--gray)">
+      <i class="fas fa-tags" style="font-size:40px;color:var(--lgray);display:block;margin-bottom:14px"></i>
+      <p style="font-size:14px;font-weight:500">No hay categorías todavía</p>
+      <p style="font-size:12px;margin-top:5px">Haz clic en "Nueva Categoría" para crear la primera</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = allCats.map(c => {
+    const count = allProds.filter(p => p.cat === c.name).length;
+    return `
+    <div class="pcard-admin">
+      <div class="pca-img" style="background:linear-gradient(135deg,#3d0a14,#6B1A2A);position:relative;overflow:hidden">
+        ${c.img
+          ? `<img src="${c.img}" alt="${c.name}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" onerror="this.style.display='none'"/>`
+          : `<span style="font-size:44px;z-index:1;position:relative">${c.emoji||'📁'}</span>`
+        }
+      </div>
+      <div class="pca-body">
+        ${c.emoji?`<div class="pca-cat">${c.emoji}</div>`:''}
+        <div class="pca-name">${c.name}</div>
+        <div style="font-size:12px;color:var(--gray);margin-bottom:10px">${count} producto${count!==1?'s':''}</div>
+        <div class="pca-actions">
+          <button class="btn btn-outline btn-sm" onclick="editCat('${c.docId}')"><i class="fas fa-edit"></i> Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCat('${c.docId}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function populateCatSelects(){
@@ -1507,7 +1602,7 @@ function removeCatImg(){
 
 async function saveCat(){
   const name  = document.getElementById('catName').value.trim();
-  const emoji = document.getElementById('catEmoji').value.trim() || '📦';
+  const emoji = document.getElementById('catEmoji').value.trim() || '';
   if(!name){ aToast('⚠️ Escribe el nombre de la categoría'); return; }
 
   const btn = document.getElementById('saveCatBtn');
@@ -1517,13 +1612,10 @@ async function saveCat(){
   let imgUrl = selectedCatImgUrl;
 
   // ── Subir imagen a Firebase Storage ──
-  if(selectedCatImgFile && window._storage){
+  if(selectedCatImgFile){
     try {
       document.getElementById('catImgStatus').textContent = '⬆️ Subiendo imagen...';
-      const {ref, uploadBytes, getDownloadURL} = window._fb2;
-      const storageRef = ref(window._storage, `categories/${Date.now()}_${selectedCatImgFile.name}`);
-      const snapshot   = await uploadBytes(storageRef, selectedCatImgFile);
-      imgUrl           = await getDownloadURL(snapshot.ref);
+      imgUrl = await uploadToImgbb(selectedCatImgFile);
       document.getElementById('catImgStatus').textContent = '✅ Imagen subida';
     } catch(e){
       aToast('Error subiendo imagen: ' + e.message);

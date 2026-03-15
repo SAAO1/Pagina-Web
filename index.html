@@ -4,8 +4,10 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>NaturalSex — Placer · Bienestar · Confianza</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" media="print" onload="this.media='all'"/>
 
 <!-- ══ FIREBASE SDK ══ -->
 <script type="module">
@@ -47,12 +49,6 @@
 setTimeout(() => document.dispatchEvent(new Event('firebaseReady')), 0);
 </script>
 
-<!-- ══ EMAILJS ══ -->
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  // Reemplaza con tu Public Key de EmailJS
-  emailjs.init("TU_EMAILJS_PUBLIC_KEY");
-</script>
 
 <style>
 :root{
@@ -771,42 +767,12 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
     <nav>
       <div class="ni ddp">
         Catálogo <i class="fas fa-chevron-down" style="font-size:9px;margin-left:4px"></i>
-        <div class="ddp-menu">
-          <div class="ddp-col">
-            <h4>Lencería y Disfraces</h4>
-            <a onclick="goCat('Lencería')">Lencería</a>
-            <a onclick="goCat('Babydolls')">Babydolls</a>
-            <a onclick="goCat('Bodys')">Bodys</a>
-            <a onclick="goCat('Corsets')">Corsets</a>
-            <a onclick="goCat('Mallas')">Mallas</a>
-            <a onclick="goCat('Talla Grande')">Talla Grande / Curvy</a>
-          </div>
-          <div class="ddp-col">
-            <h4>Juguetes</h4>
-            <a onclick="goCat('Vibradores')">Vibradores</a>
-            <a onclick="goCat('Dildos')">Dildos</a>
-            <a onclick="goCat('Balas')">Balas Vibradoras</a>
-            <a onclick="goCat('Anillos')">Anillos de Placer</a>
-            <a onclick="goCat('Plugs')">Plugs Anales</a>
-            <h4 style="margin-top:12px">Bondage</h4>
-            <a onclick="goCat('Bondage')">Arneses &amp; Bondage</a>
-            <a onclick="goCat('Bondage')">Esposas</a>
-          </div>
-          <div class="ddp-col">
-            <h4>Lubricantes</h4>
-            <a onclick="goCat('Lubricantes')">Lubricante Neutro</a>
-            <a onclick="goCat('Lubricantes')">Lubricante Anal</a>
-            <a onclick="goCat('Aceites')">Aceites &amp; Masajes</a>
-            <h4 style="margin-top:12px">Estimulantes</h4>
-            <a onclick="goCat('Estimulantes')">Potenciadores</a>
-            <a onclick="goCat('Estimulantes')">Feromonas</a>
-            <h4 style="margin-top:12px">Cuidado Íntimo</h4>
-            <a onclick="goCat('Condones')">Condones</a>
-            <a onclick="goCat('Cuidado')">Toy Cleaner</a>
+        <div class="ddp-menu" id="ddpMenu" style="min-width:200px;grid-template-columns:1fr">
+          <div class="ddp-col" id="ddpCatList">
+            <a onclick="goCat('Todos')">Ver todo el catálogo</a>
           </div>
         </div>
       </div>
-      <div class="ni" onclick="goCat('Ofertas')">Ofertas</div>
       <div class="ni" onclick="go('home')">Inicio</div>
     </nav>
     <div class="hdr-icons">
@@ -826,33 +792,12 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
     <div class="mob-logo">Natural<em>Sex</em></div>
     <button class="mob-close" onclick="closeMobMenu()"><i class="fas fa-times"></i></button>
   </div>
-  <div class="mob-links">
+  <div class="mob-links" id="mobLinks">
     <div class="mob-section">Navegar</div>
     <div class="mob-link" onclick="closeMobMenu();go('home')"><i class="fas fa-home"></i> Inicio</div>
     <div class="mob-link" onclick="closeMobMenu();goCat('Todos')"><i class="fas fa-th-large"></i> Todo el Catálogo</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Ofertas')"><i class="fas fa-tag"></i> Ofertas de la Semana</div>
-
-    <div class="mob-section">Lencería y Disfraces</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Lencería')"><i class="fas fa-star"></i> Lencería</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Babydolls')"><i class="fas fa-star"></i> Babydolls</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Bodys')"><i class="fas fa-star"></i> Bodys</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Corsets')"><i class="fas fa-star"></i> Corsets</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Talla Grande')"><i class="fas fa-star"></i> Talla Grande / Curvy</div>
-
-    <div class="mob-section">Juguetes</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Vibradores')"><i class="fas fa-heart"></i> Vibradores</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Dildos')"><i class="fas fa-heart"></i> Dildos</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Balas')"><i class="fas fa-heart"></i> Balas Vibradoras</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Anillos')"><i class="fas fa-heart"></i> Anillos de Placer</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Plugs')"><i class="fas fa-heart"></i> Plugs Anales</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Bondage')"><i class="fas fa-link"></i> Bondage &amp; Esposas</div>
-
-    <div class="mob-section">Lubricantes y Más</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Lubricantes')"><i class="fas fa-tint"></i> Lubricantes</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Aceites')"><i class="fas fa-tint"></i> Aceites &amp; Masajes</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Estimulantes')"><i class="fas fa-bolt"></i> Estimulantes</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Condones')"><i class="fas fa-shield-alt"></i> Condones</div>
-    <div class="mob-link" onclick="closeMobMenu();goCat('Cuidado')"><i class="fas fa-spray-can"></i> Toy Cleaner</div>
+    <div class="mob-section" id="mobCatSection" style="display:none">Categorías</div>
+    <div id="mobCatLinks"></div>
   </div>
   <div class="mob-foot">
     <button class="mob-ft-user" onclick="closeMobMenu();toggleAuth()"><i class="fas fa-user" style="margin-right:7px"></i>Mi Cuenta</button>
@@ -946,7 +891,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
       <div class="hero-visual">
         <div class="hero-card"><div class="hc-icon"><i class="fas fa-shipping-fast"></i></div><div class="hc-label">Envío Express</div><div class="hc-val">24h</div><div class="hc-sub">Barranquilla y área metro</div></div>
         <div class="hero-card" style="margin-right:34px"><div class="hc-icon"><i class="fas fa-box"></i></div><div class="hc-label">Empaque</div><div class="hc-val">Discreto</div><div class="hc-sub">Sin logos ni indicaciones</div></div>
-        <div class="hero-card"><div class="hc-icon"><i class="fas fa-shield-alt"></i></div><div class="hc-label">Pago Seguro</div><div class="hc-val">SSL</div><div class="hc-sub">PSE Bancolombia · Contraentrega</div></div>
+        <div class="hero-card"><div class="hc-icon"><i class="fas fa-shield-alt"></i></div><div class="hc-label">Pago Seguro</div><div class="hc-val">SSL</div><div class="hc-sub">Depósito Bancario · Contraentrega</div></div>
       </div>
     </div>
   </div>
@@ -1068,13 +1013,10 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
   </div>
   <div class="pp-layout">
     <div>
-      <div class="main-img"><div class="mii"><i class="fas fa-image"></i><span>Tu foto de producto aquí</span></div></div>
-      <div class="thumbs">
-        <div class="thumb act"><i class="fas fa-image"></i></div>
-        <div class="thumb"><i class="fas fa-image"></i></div>
-        <div class="thumb"><i class="fas fa-image"></i></div>
-        <div class="thumb"><i class="fas fa-image"></i></div>
+      <div class="main-img" id="pdMainImg">
+        <div class="mii"><i class="fas fa-image"></i><span>Imagen del producto</span></div>
       </div>
+      <div class="thumbs" id="pdThumbs"></div>
     </div>
     <div>
       <div class="pd-cat" onclick="goCat('Todos')"><i class="fas fa-arrow-left"></i><span id="pdCat">Categoría</span></div>
@@ -1236,8 +1178,8 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
               </div>
               <div class="pay-opt" onclick="selPay('pse',this)">
                 <i class="fas fa-university pay-icon"></i>
-                <div class="pay-name">PSE — Bancolombia</div>
-                <div class="pay-sub">Transferencia<br/>bancaria</div>
+                <div class="pay-name">Depósito Bancario</div>
+                <div class="pay-sub">Bancolombia<br/>o Nequi</div>
               </div>
             </div>
             <!-- COD -->
@@ -1248,21 +1190,46 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
                 <div style="font-size:12px;color:var(--gray);line-height:1.6">📍 Disponible en <strong>Barranquilla, Soledad y Puerto Colombia</strong><br/>⏱ Entrega en <strong>24 horas</strong> · Empaque 100% discreto</div>
               </div>
             </div>
-            <!-- PSE / BANCOLOMBIA -->
+            <!-- DEPÓSITO BANCARIO -->
             <div class="pay-frm" id="pf-pse">
-              <div style="background:rgba(255,193,7,.07);border:1px solid rgba(255,193,7,.35);border-radius:8px;padding:16px 18px;margin-bottom:14px">
-                <div style="font-size:14px;font-weight:700;margin-bottom:10px;color:#7a5000"><i class="fas fa-university" style="margin-right:7px"></i>🏦 Transferencia PSE — Bancolombia</div>
-                <div style="font-size:13px;line-height:1.8;margin-bottom:4px">Número de cuenta: <strong style="color:var(--text)">XXXXXXXXXX</strong> <span style="font-size:11px;color:var(--gray)">(agrega tu número real en el código)</span></div>
-                <div style="font-size:13px;line-height:1.8;margin-bottom:4px">Tipo: <strong>Cuenta de Ahorros</strong></div>
-                <div style="font-size:13px;line-height:1.8;margin-bottom:4px">Titular: <strong>NaturalSex</strong></div>
-                <div style="font-size:13px;line-height:1.8">Cédula/NIT: <strong>XXXXXXXXXX</strong></div>
-                <div style="margin-top:10px;padding:10px;background:rgba(0,0,0,.04);border-radius:6px;font-size:12px;color:#666">
-                  📸 Después de transferir, envía el comprobante por <a href="https://wa.me/573244518229" target="_blank" style="color:var(--vino);font-weight:600">WhatsApp</a> para confirmar tu pedido.
+              <div style="background:rgba(255,193,7,.06);border:1px solid rgba(255,193,7,.3);border-radius:10px;padding:18px 20px;margin-bottom:14px">
+                <p style="font-size:13px;color:#5a4000;line-height:1.8;margin-bottom:16px">
+                  A continuación le damos los números de cuenta para un pago exitoso; y no olvide que en esta modalidad de pago deberá enviar la imagen de la constancia o voucher de su operación bancaria, a su asesor de compras online.<br/>
+                  <strong>WhatsApp:</strong> <a href="https://wa.me/573244518229" target="_blank" style="color:var(--vino);font-weight:600">+57 324 451 8229</a>
+                </p>
+
+                <!-- Bancolombia -->
+                <div style="background:#fff;border:1.5px solid #ffd700;border-radius:8px;padding:14px 16px;margin-bottom:12px">
+                  <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+                    <div style="width:36px;height:36px;background:#ffd700;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🏦</div>
+                    <strong style="font-size:14px;color:#1a1a1a">BANCOLOMBIA</strong>
+                  </div>
+                  <div style="font-size:13px;color:#333;line-height:2">
+                    <div>Cuenta Corriente: <strong>#442-00000-277</strong></div>
+                    <div>Titular: <strong>Mi Pc Equipos SAS</strong></div>
+                    <div>NIT: <strong>900.071.175-9</strong></div>
+                  </div>
+                </div>
+
+                <!-- Nequi -->
+                <div style="background:#fff;border:1.5px solid #7b2d8b;border-radius:8px;padding:14px 16px;margin-bottom:14px">
+                  <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+                    <div style="width:36px;height:36px;background:#7b2d8b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📱</div>
+                    <strong style="font-size:14px;color:#1a1a1a">NEQUI</strong>
+                  </div>
+                  <div style="font-size:13px;color:#333;line-height:2">
+                    <div>Número: <strong>#314-535-3006</strong></div>
+                    <div>A nombre de: <strong>Millgu</strong></div>
+                  </div>
+                </div>
+
+                <div style="background:rgba(107,26,42,.06);border:1px solid rgba(107,26,42,.2);border-radius:6px;padding:11px 14px;font-size:12px;color:#555;line-height:1.7">
+                  📸 <strong>Recuerda:</strong> después de realizar tu transferencia, envía el comprobante por WhatsApp al <a href="https://wa.me/573244518229" target="_blank" style="color:var(--vino);font-weight:600">+57 324 451 8229</a> para confirmar tu pedido.
                 </div>
               </div>
               <div class="fg">
-                <label class="flbl">Nombre del titular que realizó la transferencia</label>
-                <input class="fin" id="pseNombre" placeholder="Tu nombre completo"/>
+                <label class="flbl">Tu nombre completo (quien realizó el pago)</label>
+                <input class="fin" id="pseNombre" placeholder="Ej: María García"/>
               </div>
             </div>
           </div>
@@ -1385,7 +1352,7 @@ footer{background:var(--vino-d);color:rgba(255,255,255,.75);padding:60px 40px 26
         <div class="ft-h" style="margin-top:22px">Pagos Aceptados</div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
           <div style="display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.65);font-size:13px"><i class="fas fa-money-bill-wave" style="color:var(--gold)"></i> Contraentrega</div>
-          <div style="display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.65);font-size:13px"><i class="fas fa-university" style="color:var(--gold)"></i> PSE — Bancolombia</div>
+          <div style="display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.65);font-size:13px"><i class="fas fa-university" style="color:var(--gold)"></i> Depósito Bancario</div>
           <div style="display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.65);font-size:13px"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Pago 100% seguro</div>
         </div>
       </div>
@@ -1463,19 +1430,40 @@ let fbUser=null;
 // FIREBASE READY
 // ═══════════════════════════════════
 document.addEventListener('firebaseReady', initApp);
-// fallback if already loaded
 if(window._firebaseReady) initApp();
 
-function initApp(){
-  // Quitar loader de inmediato — no bloquear por Firebase
-  const loaderEl = document.getElementById('loader');
-  if(loaderEl) loaderEl.classList.add('hidden');
-  listenProducts();
-  // Seguridad: si en 5 segundos no hay productos, usar los locales
-  setTimeout(()=>{ if(!allProds.length){ loadFallbackProducts(); onProductsLoaded(); } }, 5000);
+// ══ CACHÉ LOCAL — muestra todo al instante sin esperar a Firebase ══
+const CACHE_KEY = 'ns_prods_v1';
+const CACHE_CAT = 'ns_cats_v1';
+
+function loadFromCache(){
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if(raw){ allProds = JSON.parse(raw); onProductsLoaded(); }
+    const rawC = localStorage.getItem(CACHE_CAT);
+    if(rawC){
+      window._allCatsFromFirebase = JSON.parse(rawC);
+      renderCatCounts(); updateNavMenus();
+    }
+  } catch(e){}
 }
-// Seguridad extra: quitar loader después de 3 segundos pase lo que pase
-setTimeout(()=>{ const l=document.getElementById('loader'); if(l) l.classList.add('hidden'); }, 3000);
+
+function saveToCache(prods, cats){
+  try {
+    if(prods) localStorage.setItem(CACHE_KEY, JSON.stringify(prods));
+    if(cats)  localStorage.setItem(CACHE_CAT,  JSON.stringify(cats));
+  } catch(e){}
+}
+
+function initApp(){
+  // 1. Mostrar caché INMEDIATAMENTE (< 50ms) — primera visita vacío, resto instantáneo
+  loadFromCache();
+  // 2. Firebase en segundo plano actualiza y guarda nueva caché
+  listenProducts();
+  // 3. Si Firebase no responde en 4s, quedarse con lo que hay
+  setTimeout(()=>{ if(!allProds.length) onProductsLoaded(); }, 4000);
+}
+
 
 function onFirebaseUser(u){
   fbUser=u;
@@ -1494,24 +1482,38 @@ function listenProducts(){
   if(!window._db){ onProductsLoaded(); return; }
   try {
     const {collection, onSnapshot} = window._fb;
+
+    // ── Productos: carga desde Firebase y guarda en caché ──
     onSnapshot(collection(window._db,'products'), snap => {
-      allProds = snap.docs.map(d=>({id:d.id,...d.data()}));
+      const fresh = snap.docs.map(d=>({id:d.id,...d.data()}));
+      allProds = fresh;
+      saveToCache(fresh, null);
       onProductsLoaded();
-    }, err => { console.warn('Firebase error:', err.message); onProductsLoaded(); });
-    onSnapshot(collection(window._db,'siteConfig'), snap => {
-      snap.docs.forEach(d => {
-        const data = d.data();
-        if(d.id==='hero') applySiteHero(data);
-        if(d.id==='banners') applySiteBanners(data);
-        if(d.id==='colors') applySiteColors(data);
-        if(d.id==='store') applySiteStore(data);
-        if(d.id==='shipping') applyShippingConfig(data);
-      });
-    }, err => {});
-    onSnapshot(collection(window._db,'categories'), snap=>{
-      window._allCatsFromFirebase = snap.docs.map(d=>({id:d.id,...d.data()}));
-      if(window._allCatsFromFirebase.length) renderCatCounts();
-    }, err=>{});
+    }, err => { console.warn('Firebase error:', err.message); if(!allProds.length) onProductsLoaded(); });
+
+    // ── Config y categorías: después de 500ms para no competir con productos ──
+    setTimeout(()=>{
+      try {
+        onSnapshot(collection(window._db,'siteConfig'), snap => {
+          snap.docs.forEach(d => {
+            const data = d.data();
+            if(d.id==='hero')     applySiteHero(data);
+            if(d.id==='banners')  applySiteBanners(data);
+            if(d.id==='colors')   applySiteColors(data);
+            if(d.id==='store')    applySiteStore(data);
+            if(d.id==='shipping') applyShippingConfig(data);
+          });
+        }, ()=>{});
+        onSnapshot(collection(window._db,'categories'), snap=>{
+          const freshCats = snap.docs.map(d=>({id:d.id,...d.data()}));
+          window._allCatsFromFirebase = freshCats;
+          saveToCache(null, freshCats);
+          renderCatCounts();
+          updateNavMenus();
+        }, ()=>{});
+      } catch(e){}
+    }, 500);
+
   } catch(e){ console.warn('Error:', e.message); onProductsLoaded(); }
 }
 
@@ -1643,11 +1645,51 @@ function onProductsLoaded(){
 function updateFooterCategories(){
   const ftLinks = document.getElementById('ftCatLinks');
   if(!ftLinks) return;
-  // Get unique categories from products
-  const cats = [...new Set(allProds.map(p=>p.cat))].filter(Boolean).sort();
+  const cats = (window._allCatsFromFirebase||[]).filter(c=>c.name);
   if(!cats.length) return;
-  ftLinks.innerHTML = cats.map(c=>`<a onclick="goCat('${c}')" style="cursor:pointer">${c}</a>`).join('') +
-    `<a onclick="goCat('Ofertas')" style="cursor:pointer">Ofertas</a>`;
+  ftLinks.innerHTML = cats.map(c=>`<a onclick="goCat('${c.name}')" style="cursor:pointer">${c.emoji||''} ${c.name}</a>`).join('');
+}
+
+function updateNavMenus(){
+  const cats = window._allCatsFromFirebase || [];
+
+  // ── Dropdown escritorio ──
+  const ddp  = document.getElementById('ddpCatList');
+  const menu = document.getElementById('ddpMenu');
+  if(ddp){
+    if(!cats.length){
+      ddp.innerHTML = `<a onclick="goCat('Todos')">Ver todo el catálogo</a>`;
+    } else {
+      ddp.innerHTML =
+        `<a onclick="goCat('Todos')" style="font-weight:600;color:var(--vino)">` +
+        `<i class="fas fa-th-large" style="margin-right:5px;font-size:10px"></i>Ver todo el catálogo</a>` +
+        cats.map(c=>`<a onclick="goCat('${c.name}')">${c.emoji?c.emoji+' ':''}${c.name}</a>`).join('');
+      if(menu){
+        const cols = cats.length <= 4 ? 1 : cats.length <= 8 ? 2 : 3;
+        menu.style.gridTemplateColumns = `repeat(${cols},1fr)`;
+        menu.style.minWidth = cols===1?'200px':cols===2?'360px':'520px';
+      }
+    }
+  }
+
+  // ── Menú móvil ──
+  const mobLinks   = document.getElementById('mobCatLinks');
+  const mobSection = document.getElementById('mobCatSection');
+  if(mobLinks){
+    if(!cats.length){
+      if(mobSection) mobSection.style.display='none';
+      mobLinks.innerHTML='';
+    } else {
+      if(mobSection) mobSection.style.display='block';
+      mobLinks.innerHTML = cats.map(c=>
+        `<div class="mob-link" onclick="closeMobMenu();goCat('${c.name}')">` +
+        `<i class="fas fa-tag"></i> ${c.emoji?c.emoji+' ':''}${c.name}</div>`
+      ).join('');
+    }
+  }
+
+  // ── Footer categorías ──
+  updateFooterCategories();
 }
 
 function updateHeroCount(){
@@ -1726,10 +1768,15 @@ function cardHTML(p,i){
   const wasHTML=p.was?`<span class="pp-was">$${p.was.toLocaleString('es-CO')}</span>`:'';
   return`<div class="pcard">
     <div class="pimg" style="background:${g}" onclick="goProd('${p.id}')">
-      <i class="fas fa-box-open"></i><div class="pimg-txt">Foto de producto</div>
+      ${p.img
+        ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:0" loading="lazy" onerror="this.style.display='none'"/>`
+        : `<i class="fas fa-box-open"></i><div class="pimg-txt">Foto de producto</div>`
+      }
+      <div style="position:relative;z-index:1;width:100%;height:100%;pointer-events:none">
       ${bdg}${stockBdg}
-      <button class="wish-btn${liked?' liked':''}" onclick="event.stopPropagation();toggleWish('${p.id}',this)">${liked?'<i class="fas fa-heart"></i>':'<i class="far fa-heart"></i>'}</button>
-      <button class="pc-act" onclick="event.stopPropagation();addCart('${p.id}')"><i class="fas fa-shopping-bag"></i> Agregar al carrito</button>
+      </div>
+      <button class="wish-btn${liked?' liked':''}" style="z-index:2;position:absolute;top:10px;right:10px" onclick="event.stopPropagation();toggleWish('${p.id}',this)">${liked?'<i class="fas fa-heart"></i>':'<i class="far fa-heart"></i>'}</button>
+      <button class="pc-act" style="z-index:2" onclick="event.stopPropagation();addCart('${p.id}')"><i class="fas fa-shopping-bag"></i> Agregar al carrito</button>
     </div>
     <div class="pinfo">
       <div class="pcat">${p.cat}</div>
@@ -1802,6 +1849,22 @@ function goProd(id){
     sizesWrap.style.display='none';
     sizesEl.innerHTML='';
   }
+  // ── Imágenes del producto ──
+  const mainImgEl = document.getElementById('pdMainImg');
+  const thumbsEl  = document.getElementById('pdThumbs');
+  // Construir array de imágenes: img1 obligatoria, img2/img3/img4 opcionales
+  const imgs = [p.img, p.img2, p.img3, p.img4].filter(Boolean);
+  if(imgs.length){
+    mainImgEl.innerHTML = `<img src="${imgs[0]}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:10px" id="pdMainImgTag"/>`;
+    thumbsEl.innerHTML  = imgs.map((src,i)=>`
+      <div class="thumb${i===0?' act':''}" onclick="switchImg('${src}',this)" style="background:var(--lgray);display:flex;align-items:center;justify-content:center;overflow:hidden">
+        <img src="${src}" alt="img${i+1}" style="width:100%;height:100%;object-fit:cover"/>
+      </div>`).join('');
+  } else {
+    mainImgEl.innerHTML = `<div class="mii"><i class="fas fa-image"></i><span>Imagen del producto</span></div>`;
+    thumbsEl.innerHTML  = '';
+  }
+
   const wb=document.getElementById('pdWlBtn');
   wb.className='btn-wl-pd'+(wishlist.includes(id)?' liked':'');
   wb.innerHTML=wishlist.includes(id)?'<i class="fas fa-heart"></i>':'<i class="far fa-heart"></i>';
@@ -2492,6 +2555,13 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeSearch(); do
 // PRODUCT PAGE
 // ═══════════════════════════════════
 function chQty(d){ curQty=Math.max(1,curQty+d); document.getElementById('pdQty').textContent=curQty; }
+
+function switchImg(src, thumbEl){
+  const main = document.getElementById('pdMainImgTag');
+  if(main) main.src = src;
+  document.querySelectorAll('#pdThumbs .thumb').forEach(t=>t.classList.remove('act'));
+  if(thumbEl) thumbEl.classList.add('act');
+}
 function selSz(el){ document.querySelectorAll('.sz').forEach(s=>s.classList.remove('sel')); el.classList.add('sel'); curSize=el.textContent; }
 
 // ═══════════════════════════════════
