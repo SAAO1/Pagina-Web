@@ -211,254 +211,121 @@ public class Arbol {
        System.out.println("");
    }
       
-   //crear
+  
    public void crear(){
        this.raiz = null;
    }
-   
-   //insertar
-   public void insertar(char valor){
-       Nodo nuevo = new Nodo(valor);
-       if (this.raiz == null){
-           this.raiz = nuevo;
-       } else {
-           insertar_recursivo(this.raiz, nuevo);
-       }
-   }
-   
-   public void insertar_recursivo(Nodo nodo, Nodo nuevo){
-       if (nuevo.getDato() < nodo.getDato()){
-           if (nodo.getIzquierdo() == null){
-               nodo.setIzquierdo(nuevo);
-           } else {
-               insertar_recursivo(nodo.getIzquierdo(), nuevo);
-           }
-       } else {
-           if (nodo.getDerecho() == null){
-               nodo.setDerecho(nuevo);
-           } else {
-               insertar_recursivo(nodo.getDerecho(), nuevo);
-           }
-       }
-   }
-   
-   //altura
-   public int altura(Nodo nodo){
-       if (nodo == null){
-           return 0;
-       }
-       return Math.max(altura(nodo.getIzquierdo()), altura(nodo.getDerecho())) + 1;
-   }
-   
-   //sumar
-   public int sumar(Nodo nodo){
-       if (nodo == null){
-           return 0;
-       }
-       return nodo.getDato() + sumar(nodo.getIzquierdo()) + sumar(nodo.getDerecho());
-   }
-   
-   //contar
-   public int contar(Nodo nodo){
-       if (nodo == null){
-           return 0;
-       }
-       return 1 + contar(nodo.getIzquierdo()) + contar(nodo.getDerecho());
-   }
-   
-   //peso
-   public int peso(Nodo nodo){
-       if (nodo == null){
-           return 0;
-       }
-       return 1 + peso(nodo.getIzquierdo()) + peso(nodo.getDerecho());
-   }
-   
-   //hoja
-   public int hoja(Nodo nodo){
-       if (nodo == null){
-           return 0;
-       }
-       if (nodo.getIzquierdo() == null && nodo.getDerecho() == null){
-           return 1;
-       }
-       return hoja(nodo.getIzquierdo()) + hoja(nodo.getDerecho());
-   }
-   
-   //padre
-   public Nodo padre(Nodo nodo, char valor){
-       if (nodo == null || nodo.getDato() == valor){
-           return null;
-       }
-       if ((nodo.getIzquierdo() != null && nodo.getIzquierdo().getDato() == valor) ||
-           (nodo.getDerecho() != null && nodo.getDerecho().getDato() == valor)){
-           return nodo;
-       }
-       if (valor < nodo.getDato()){
-           return padre(nodo.getIzquierdo(), valor);
-       } else {
-           return padre(nodo.getDerecho(), valor);
-       }
-   }
-   
-   //tio
-   public Nodo tio(Nodo raiz, char valor){
-       Nodo pad = padre(raiz, valor);
-       if (pad == null){
-           return null;
-       }
-       Nodo abuelo = padre(raiz, pad.getDato());
-       if (abuelo == null){
-           return null;
-       }
-       if (abuelo.getIzquierdo() == pad){
-           return abuelo.getDerecho();
-       } else {
-           return abuelo.getIzquierdo();
-       }
-   }
-   
-   //completo
-   public boolean completo(Nodo nodo){
-       int nodos = contar(nodo);
-       int alt = altura(nodo);
-       return nodos == (Math.pow(2, alt) - 1);
-   }
-   
-   //minimo
-   public Nodo minimo(Nodo nodo){
-       while (nodo.getIzquierdo() != null){
-           nodo = nodo.getIzquierdo();
-       }
-       return nodo;
-   }
-   
-   //eliminar
-   public void eliminar(char valor){
-       this.raiz = eliminar_recursivo(this.raiz, valor);
-   }
-   
-   public Nodo eliminar_recursivo(Nodo nodo, char valor){
-       if (nodo == null){
-           return null;
-       }
-       if (valor < nodo.getDato()){
-           nodo.setIzquierdo(eliminar_recursivo(nodo.getIzquierdo(), valor));
-       } else if (valor > nodo.getDato()){
-           nodo.setDerecho(eliminar_recursivo(nodo.getDerecho(), valor));
-       } else {
-           if (nodo.getIzquierdo() == null){
-               return nodo.getDerecho();
-           } else if (nodo.getDerecho() == null){
-               return nodo.getIzquierdo();
-           }
-           Nodo sucesor = minimo(nodo.getDerecho());
-           nodo.setDato(sucesor.getDato());
-           nodo.setDerecho(eliminar_recursivo(nodo.getDerecho(), sucesor.getDato()));
-       }
-       return nodo;
-   }
-   
-   //factorEquilibrio
-   public int factorEquilibrio(Nodo nodo){
-       if (nodo == null){
-           return 0;
-       }
-       return altura(nodo.getIzquierdo()) - altura(nodo.getDerecho());
-   }
-   
-   //rotacionDerecha
-   public Nodo rotacionDerecha(Nodo nodo){
-       Nodo izq = nodo.getIzquierdo();
-       nodo.setIzquierdo(izq.getDerecho());
-       izq.setDerecho(nodo);
-       return izq;
-   }
-   
-   //rotacionIzquierda
-   public Nodo rotacionIzquierda(Nodo nodo){
-       Nodo der = nodo.getDerecho();
-       nodo.setDerecho(der.getIzquierdo());
-       der.setIzquierdo(nodo);
-       return der;
-   }
-   
-   //rotacionDobleDerecha
-   public Nodo rotacionDobleDerecha(Nodo nodo){
-       nodo.setIzquierdo(rotacionIzquierda(nodo.getIzquierdo()));
-       return rotacionDerecha(nodo);
-   }
-   
-   //rotacionDobleIzquierda
-   public Nodo rotacionDobleIzquierda(Nodo nodo){
-       nodo.setDerecho(rotacionDerecha(nodo.getDerecho()));
-       return rotacionIzquierda(nodo);
-   }
-   
-   //balancear
-   public Nodo balancear(Nodo nodo){
-       if (nodo == null){
-           return null;
-       }
-       int fe = factorEquilibrio(nodo);
-       if (fe > 1){
-           if (factorEquilibrio(nodo.getIzquierdo()) >= 0){
-               nodo = rotacionDerecha(nodo);
-           } else {
-               nodo = rotacionDobleDerecha(nodo);
-           }
-       } else if (fe < -1){
-           if (factorEquilibrio(nodo.getDerecho()) <= 0){
-               nodo = rotacionIzquierda(nodo);
-           } else {
-               nodo = rotacionDobleIzquierda(nodo);
-           }
-       }
-       return nodo;
-   }
-   
-   //insertarAVL
-   public void insertarAVL(char valor){
-       this.raiz = insertarAVL_recursivo(this.raiz, valor);
-   }
-   
-   public Nodo insertarAVL_recursivo(Nodo nodo, char valor){
-       if (nodo == null){
-           return new Nodo(valor);
-       }
-       if (valor < nodo.getDato()){
-           nodo.setIzquierdo(insertarAVL_recursivo(nodo.getIzquierdo(), valor));
-       } else {
-           nodo.setDerecho(insertarAVL_recursivo(nodo.getDerecho(), valor));
-       }
-       return balancear(nodo);
-   }
-   
-   //eliminarAVL
-   public void eliminarAVL(char valor){
-       this.raiz = eliminarAVL_recursivo(this.raiz, valor);
-   }
-   
-   public Nodo eliminarAVL_recursivo(Nodo nodo, char valor){
-       if (nodo == null){
-           return null;
-       }
-       if (valor < nodo.getDato()){
-           nodo.setIzquierdo(eliminarAVL_recursivo(nodo.getIzquierdo(), valor));
-       } else if (valor > nodo.getDato()){
-           nodo.setDerecho(eliminarAVL_recursivo(nodo.getDerecho(), valor));
-       } else {
-           if (nodo.getIzquierdo() == null){
-               return nodo.getDerecho();
-           } else if (nodo.getDerecho() == null){
-               return nodo.getIzquierdo();
-           }
-           Nodo sucesor = minimo(nodo.getDerecho());
-           nodo.setDato(sucesor.getDato());
-           nodo.setDerecho(eliminarAVL_recursivo(nodo.getDerecho(), sucesor.getDato()));
-       }
-       return balancear(nodo);
-   }
+  public int altura(Nodo nodo){
+        if (nodo == null){
+            return 0;
+        }
+        return Math.max(altura(nodo.getIzquierdo()), altura(nodo.getDerecho())) + 1;
+    }
  
+    public int peso(Nodo nodo){
+        if (nodo == null){
+            return 0;
+        }
+        return 1 + peso(nodo.getIzquierdo()) + peso(nodo.getDerecho());
+    }
+ 
+    public int hoja(Nodo nodo){
+        if (nodo == null){
+            return 0;
+        }
+        if (nodo.getIzquierdo() == null && nodo.getDerecho() == null){
+            return 1;
+        }
+        return hoja(nodo.getIzquierdo()) + hoja(nodo.getDerecho());
+    }
+ 
+    public Nodo padre(Nodo nodo, char valor){
+        if (nodo == null || nodo.getDato() == valor){
+            return null;
+        }
+        if ((nodo.getIzquierdo() != null && nodo.getIzquierdo().getDato() == valor) ||
+            (nodo.getDerecho() != null && nodo.getDerecho().getDato() == valor)){
+            return nodo;
+        }
+        if (valor < nodo.getDato()){
+            return padre(nodo.getIzquierdo(), valor);
+        } else {
+            return padre(nodo.getDerecho(), valor);
+        }
+    }
+ 
+    public Nodo tio(Nodo raiz, char valor){
+        Nodo pad = padre(raiz, valor);
+        if (pad == null){
+            return null;
+        }
+        Nodo abuelo = padre(raiz, pad.getDato());
+        if (abuelo == null){
+            return null;
+        }
+        if (abuelo.getIzquierdo() == pad){
+            return abuelo.getDerecho();
+        } else {
+            return abuelo.getIzquierdo();
+        }
+    }
+ 
+    public int contar(Nodo nodo){
+        if (nodo == null){
+            return 0;
+        }
+        return 1 + contar(nodo.getIzquierdo()) + contar(nodo.getDerecho());
+    }
+ 
+    public boolean completo(Nodo nodo){
+        int nodos = contar(nodo);
+        int alt = altura(nodo);
+        return nodos == (Math.pow(2, alt) - 1);
+    }
+ 
+    public Nodo minimo(Nodo nodo){
+        while (nodo.getIzquierdo() != null){
+            nodo = nodo.getIzquierdo();
+        }
+        return nodo;
+    }
+ 
+    public void eliminar(char valor){
+        this.raiz = eliminar_recursivo(this.raiz, valor);
+    }
+ 
+    public Nodo eliminar_recursivo(Nodo nodo, char valor){
+        if (nodo == null){
+            return null;
+        }
+        if (valor < nodo.getDato()){
+            nodo.setIzquierdo(eliminar_recursivo(nodo.getIzquierdo(), valor));
+        } else if (valor > nodo.getDato()){
+            nodo.setDerecho(eliminar_recursivo(nodo.getDerecho(), valor));
+        } else {
+            if (nodo.getIzquierdo() == null){
+                return nodo.getDerecho();
+            } else if (nodo.getDerecho() == null){
+                return nodo.getIzquierdo();
+            }
+            Nodo sucesor = minimo(nodo.getDerecho());
+            nodo.setDato(sucesor.getDato());
+            nodo.setDerecho(eliminar_recursivo(nodo.getDerecho(), sucesor.getDato()));
+        }
+        return nodo;
+    }
+ 
+    public boolean existe(Nodo nodo, char valor){
+        if (nodo == null){
+            return false;
+        }
+        if (nodo.getDato() == valor){
+            return true;
+        }
+        if (valor < nodo.getDato()){
+            return existe(nodo.getIzquierdo(), valor);
+        } else {
+            return existe(nodo.getDerecho(), valor);
+        }
+    }
 }
-
